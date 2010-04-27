@@ -1,4 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2010 Xemantic
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.xemantic.tadedon</groupId>
   <artifactId>tadedon</artifactId>
@@ -6,10 +24,35 @@
   <packaging>pom</packaging>
   <name>tadedon</name>
   <description>A bunch of GWT, GIN, Guice and Google App Engine utilities</description>
+  <url>http://code.google.com/p/tadedon/</url>
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+  <inceptionYear>2010</inceptionYear>
+  <organization>
+    <name>Xemantic</name>
+    <url>http://www.xemantic.com/</url>
+  </organization>
+  <issueManagement>
+    <url>http://code.google.com/p/tadedon/issues/</url>
+  </issueManagement>
+  <developers>
+    <developer>
+      <id>hshsce</id><name>Kazimierz Pogoda</name>
+    </developer>
+  </developers>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <gwt.version>2.0.3</gwt.version>
+    <guice.version>2.0</guice.version>
   </properties>
   <modules>
+  	<!-- <module>tadedon-guice-persistence</module> -->
   </modules>
   <build>
     <plugins>
@@ -22,8 +65,54 @@
           <target>1.5</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.riedelcastro</groupId>
+        <artifactId>maven-gcupload-plugin</artifactId>
+        <version>1.0</version>
+        <configuration>
+          <uploads>
+            <upload>
+              <extensions>jar</extensions>
+              <labels>Featured,Type-Archive,OpSys-All</labels>  
+            </upload>
+            <upload>
+              <extensions>jar</extensions>
+              <postfix>sources</postfix>
+              <labels>Featured,Type-Source,OpSys-All</labels>
+            </upload>
+            <upload>
+              <extensions>jar</extensions>
+              <postfix>javadoc</postfix>
+              <labels>Featured,Type-Docs,OpSys-All</labels>
+            </upload>
+          </uploads>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.6.1</version>
+        <configuration>
+          <breakiterator>true</breakiterator>
+          <encoding>UTF-8</encoding>
+          <links>
+            <link>http://java.sun.com/javase/6/docs/api/</link>
+            <link>http://commons.apache.org/lang/api-2.5/</link>
+            <link>http://junit.sourceforge.net/javadoc/</link>
+          </links>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+  <scm>
+    <connection>scm:hg:https://tadedon.googlecode.com/hg/</connection>
+    <developerConnection>scm:hg:https://tadedon.googlecode.com/hg/</developerConnection>
+    <url>http://code.google.com/p/tadedon/source/browse/</url>
+  </scm>
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -34,18 +123,18 @@
       <dependency>
         <groupId>com.google.inject</groupId>
         <artifactId>guice</artifactId>
-        <version>2.0</version>
+        <version>${guice.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
-        <version>2.0.3</version>
+        <version>${gwt.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-dev</artifactId>
-        <version>2.0.3</version>
+        <version>${gwt.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
