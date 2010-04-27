@@ -53,6 +53,7 @@
   </properties>
   <modules>
   	<module>tadedon-guice-utils</module>
+  	<module>tadedon-guice-persistence</module>
   </modules>
   <build>
     <plugins>
