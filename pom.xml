@@ -52,7 +52,7 @@
     <guice.version>2.0</guice.version>
   </properties>
   <modules>
-  	<!-- <module>tadedon-guice-persistence</module> -->
+  	<module>tadedon-guice-utils</module>
   </modules>
   <build>
     <plugins>
@@ -136,6 +136,22 @@
         <artifactId>gwt-dev</artifactId>
         <version>${gwt.version}</version>
         <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>3.0.2.RELEASE</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>spring-asm</artifactId>
+            <groupId>org.springframework</groupId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>jsr250-api</artifactId>
+        <version>1.0</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
