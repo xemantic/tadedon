@@ -23,26 +23,7 @@
     <groupId>com.xemantic.tadedon</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>tadedon-guice-utils</artifactId>
-  <name>tadedon-guice-utils</name>
-  <description>Guice utilities</description>
-  <dependencies>
-    <dependency>
-      <groupId>com.google.inject</groupId>
-      <artifactId>guice</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.annotation</groupId>
-      <artifactId>jsr250-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <artifactId>tadedon-guice-persistence</artifactId>
+  <name>tadedon-guice-persistence</name>
+  <description>@Transactional annotation support</description>
 </project>
