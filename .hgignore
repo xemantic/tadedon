@@ -1,3 +1,5 @@
 
 syntax: regexp
 ^tadedon-guice-utils/target$
+syntax: regexp
+^tadedon-guice-persistence/target$
