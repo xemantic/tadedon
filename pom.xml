@@ -50,6 +50,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <gwt.version>2.0.3</gwt.version>
     <guice.version>2.0</guice.version>
+    <logback.version>0.9.20</logback.version>
   </properties>
   <modules>
   	<module>tadedon-guice-utils</module>
@@ -117,6 +118,21 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>com.xemantic.tadedon</groupId>
+        <artifactId>tadedon-guice-utils</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.xemantic.tadedon</groupId>
+        <artifactId>tadedon-guice-persistence</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.xemantic.tadedon</groupId>
+        <artifactId>tadedon-guice-persistence-servlet</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.gwt.inject</groupId>
         <artifactId>gin</artifactId>
         <version>1.0</version>
@@ -124,6 +140,11 @@
       <dependency>
         <groupId>com.google.inject</groupId>
         <artifactId>guice</artifactId>
+        <version>${guice.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.inject.extensions</groupId>
+        <artifactId>guice-servlet</artifactId>
         <version>${guice.version}</version>
       </dependency>
       <dependency>
@@ -139,6 +160,11 @@
         <scope>provided</scope>
       </dependency>
       <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>javax.persistence</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
         <version>3.0.2.RELEASE</version>
@@ -150,6 +176,11 @@
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+      <dependency>
         <groupId>javax.annotation</groupId>
         <artifactId>jsr250-api</artifactId>
         <version>1.0</version>
@@ -158,6 +189,12 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.8.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>1.8.4</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
