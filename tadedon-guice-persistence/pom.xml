@@ -19,11 +19,42 @@
 
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>tadedon</artifactId>
     <groupId>com.xemantic.tadedon</groupId>
+    <artifactId>tadedon</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>tadedon-guice-persistence</artifactId>
   <name>tadedon-guice-persistence</name>
+  <packaging>jar</packaging>
   <description>@Transactional annotation support</description>
+  <dependencies>
+    <dependency>
+      <groupId>com.xemantic.tadedon</groupId>
+      <artifactId>tadedon-guice-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.persistence</groupId>
+      <artifactId>javax.persistence</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+    </dependency>
+  </dependencies>
 </project>
