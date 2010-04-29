@@ -49,7 +49,7 @@ public class PersistenceModule extends AbstractModule {
 		requestInjection(interceptor);
 		bindInterceptor(superAnnotatedWith(Transactional.class), any(), interceptor);
 		bindInterceptor(any(), superAnnotatedWith(Transactional.class), interceptor);
-		bind(Transaction.class).toProvider(interceptor);
+		bind(Transaction.class).toProvider(TransactionProvider.class);
 		bind(EntityManager.class).toProvider(EntityManagerProvider.class);
 		bind(Connection.class).toProvider(TransactionalConnectionProvider.class);
 	}
