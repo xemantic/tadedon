@@ -24,6 +24,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.PrivateBinder;
+import com.google.inject.Singleton;
 
 /**
  * Guice module enabling interceptors of {@literal @}{@link Transactional} annotation.
@@ -41,12 +43,35 @@ import com.google.inject.AbstractModule;
  */
 public class PersistenceModule extends AbstractModule {
 
+	private final Class<? extends TransactionFinalizer> m_transactionFinalizerClass;
+
+	/**
+	 * Creates new persistence module.
+	 */
+	public PersistenceModule() {
+		this(DefaultTransactionFinalizer.class);
+	}
+
+	/**
+	 * Creates new persistence module using given transaction finalizer.
+	 * <p>
+	 * Note: the finalizer class should be annotated with appropriate scope where
+	 * {@literal @}{@link Singleton} seems the most appropriate.
+	 *
+	 * @param transactionFinalizerClass the transaction finalizer class.
+	 */
+	public PersistenceModule(Class<? extends TransactionFinalizer> transactionFinalizerClass) {
+		m_transactionFinalizerClass = transactionFinalizerClass;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	protected void configure() {
 		requireBinding(EntityManagerFactory.class);
-		final TransactionalMethodInterceptor interceptor = new TransactionalMethodInterceptor();
-		requestInjection(interceptor);
+		TransactionalMethodInterceptor interceptor = new TransactionalMethodInterceptor();
+		PrivateBinder privBinder = binder().newPrivateBinder();
+		privBinder.bind(m_transactionFinalizerClass);
+		privBinder.requestInjection(interceptor);
 		bindInterceptor(superAnnotatedWith(Transactional.class), any(), interceptor);
 		bindInterceptor(any(), superAnnotatedWith(Transactional.class), interceptor);
 		bind(Transaction.class).toProvider(TransactionProvider.class);
