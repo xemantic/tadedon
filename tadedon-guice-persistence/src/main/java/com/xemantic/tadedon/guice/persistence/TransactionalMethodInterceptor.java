@@ -18,6 +18,7 @@ package com.xemantic.tadedon.guice.persistence;
 import java.util.Arrays;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -39,7 +40,7 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 	private TransactionManager m_transactionManager;
 
 	@Inject
-	private TransactionFinalizer m_transactionFinalizer;
+	private TransactionSupport m_transactionSupport;
 
 	@Inject
 	private Logger m_logger;
@@ -47,7 +48,7 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 
 	/** {@inheritDoc} */
 	@Override
-	public Object invoke(final MethodInvocation invocation) throws Throwable {
+	public Object invoke(MethodInvocation invocation) throws Throwable {
 		final Object result;
 		Transaction transaction = m_transactionManager.getLocalTransaction();
 		if (m_transactionManager.getLocalTransaction() == null) {
@@ -74,7 +75,21 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 			context.m_throwable = t;
 			throw t;
 		} finally {
-			m_transactionFinalizer.finalize(context);
+			EntityTransaction emTrx = em.getTransaction();
+			if ((!context.getTransaction().isRollbackRequested()) &&
+					m_transactionSupport.shouldCommit(context)) {
+				if (emTrx.isActive()) {
+					emTrx.commit();
+				} else {
+					m_logger.error("EntityManager transaction is already inactive, cannot commit");
+				}
+			} else {
+				if (emTrx.isActive()) {
+					emTrx.rollback();
+				} else {
+					m_logger.error("EntityManager transaction is already inactive, cannot rollback");
+				}
+			}
 		}
 	}
 
