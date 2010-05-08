@@ -43,25 +43,25 @@ import com.google.inject.Singleton;
  */
 public class PersistenceModule extends AbstractModule {
 
-	private final Class<? extends TransactionFinalizer> m_transactionFinalizerClass;
+	private final Class<? extends TransactionSupport> m_transactionSupportClass;
 
 	/**
-	 * Creates new persistence module.
+	 * Creates new persistence module using {@link DefaultTransactionSupport}.
 	 */
 	public PersistenceModule() {
-		this(DefaultTransactionFinalizer.class);
+		this(DefaultTransactionSupport.class);
 	}
 
 	/**
-	 * Creates new persistence module using given transaction finalizer.
+	 * Creates new persistence module using given transaction support.
 	 * <p>
-	 * Note: the finalizer class should be annotated with appropriate scope where
+	 * Note: the transaction support class should be annotated with appropriate scope where
 	 * {@literal @}{@link Singleton} seems the most appropriate.
 	 *
-	 * @param transactionFinalizerClass the transaction finalizer class.
+	 * @param transactionSupportClass the transaction support class.
 	 */
-	public PersistenceModule(Class<? extends TransactionFinalizer> transactionFinalizerClass) {
-		m_transactionFinalizerClass = transactionFinalizerClass;
+	public PersistenceModule(Class<? extends TransactionSupport> transactionSupportClass) {
+		m_transactionSupportClass = transactionSupportClass;
 	}
 
 	/** {@inheritDoc} */
@@ -70,7 +70,7 @@ public class PersistenceModule extends AbstractModule {
 		requireBinding(EntityManagerFactory.class);
 		TransactionalMethodInterceptor interceptor = new TransactionalMethodInterceptor();
 		PrivateBinder privBinder = binder().newPrivateBinder();
-		privBinder.bind(m_transactionFinalizerClass);
+		privBinder.bind(TransactionSupport.class).to(m_transactionSupportClass);
 		privBinder.requestInjection(interceptor);
 		bindInterceptor(superAnnotatedWith(Transactional.class), any(), interceptor);
 		bindInterceptor(any(), superAnnotatedWith(Transactional.class), interceptor);

@@ -41,7 +41,7 @@ public @interface Transactional {
 	 * should be performed at the end of transaction handling.
 	 *
 	 * @return {@code true} if transaction should not be committed, {@code false} otherwise.
-	 * @see TransactionFinalizer
+	 * @see TransactionSupport
 	 * @see PersistenceUtils#isTransactionReadOnly(java.lang.reflect.Method)
 	 */
 	boolean readOnly() default false;

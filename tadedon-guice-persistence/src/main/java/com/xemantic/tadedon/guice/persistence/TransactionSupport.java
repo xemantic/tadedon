@@ -15,24 +15,24 @@
  */
 package com.xemantic.tadedon.guice.persistence;
 
-import com.google.inject.ImplementedBy;
-
-
 /**
- * Service for finalizing transaction.
+ * Service which steers transaction lifecycle.
  * <p>
- * Created on Apr 27, 2010
+ * Created on May 8, 2010
  *
  * @author hshsce
  */
-@ImplementedBy(DefaultTransactionFinalizer.class)
-public interface TransactionFinalizer {
+public interface TransactionSupport {
 
 	/**
-	 * Finalizes transaction according to information in given {@code context}.
+	 * Decides whether transaction should be committed or
+	 * rolled back based on given {@code context}. When this
+	 * method returns {@code false}, it will always cause transaction
+	 * rollback.
 	 *
-	 * @param context the transaction context.
+	 * @param context the context of transaction.
+	 * @return {@code true} if transaction should commit, {@code false} otherwise.
 	 */
-	void finalize(TransactionContext context);
+	boolean shouldCommit(TransactionContext context);
 
 }

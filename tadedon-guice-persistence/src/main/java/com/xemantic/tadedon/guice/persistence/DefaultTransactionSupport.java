@@ -17,37 +17,28 @@ package com.xemantic.tadedon.guice.persistence;
 
 import java.lang.reflect.Method;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-
 import com.google.inject.Singleton;
 
 /**
- * Default transaction finalizer.
+ * Default transaction support.
+ * It will decide on rolling back transaction
+ * (instead of committing it) if the {@link Transactional#readOnly()} on
+ * called method was set to {@code true} or any {@link Throwable} was thrown
+ * during transaction execution.
  * <p>
- * Created on Apr 27, 2010
+ * Created on May 8, 2010
  *
  * @author hshsce
  */
 @Singleton
-public class DefaultTransactionFinalizer implements TransactionFinalizer {
+public class DefaultTransactionSupport implements TransactionSupport {
 
 	/** {@inheritDoc} */
 	@Override
-	public void finalize(TransactionContext context) {
-		EntityManager em = context.getTransaction().getEntityManager();
-		EntityTransaction emTrx = em.getTransaction();
+	public boolean shouldCommit(TransactionContext context) {
 		Method method = context.getMethodInvocation().getMethod();
-		if (emTrx.isActive()) {
-			if ((context.getThrowable() != null) ||
-					(PersistenceUtils.isTransactionReadOnly(method)) ||
-					context.getTransaction().isRollbackRequested()) {
-
-				emTrx.rollback();
-			} else {
-				emTrx.commit();
-			}
-		}
+		return ((!PersistenceUtils.isTransactionReadOnly(method)) &&
+				(context.getThrowable() == null));
 	}
 
 }
