@@ -53,13 +53,13 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 		if (m_transactionManager.getLocalTransaction() == null) {
 			transaction = m_transactionManager.newLocalTransaciton();
 			try {
-				logMethodInvocation(true, transaction, invocation);
+				logMethodInvocation("new", transaction, invocation);
 				result = invokeInNewTransaction(new DefaultTransactionContext(invocation, transaction));
 			} finally {
 				m_transactionManager.closeLocalTransaction();
 			}
 		} else {
-			logMethodInvocation(false, transaction, invocation);
+			logMethodInvocation("existing", transaction, invocation);
 			result = invocation.proceed();
 		}
 		return result;
@@ -78,18 +78,12 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 		}
 	}
 
-	private void logMethodInvocation(boolean newTransaction, Transaction transaction, MethodInvocation invocation) {
+	private void logMethodInvocation(String transactionKind, Transaction transaction, MethodInvocation invocation) {
 		if (m_logger.isDebugEnabled()) {
-			final String kind;
-			if (newTransaction) {
-				kind = "new";
-			} else {
-				kind = "existing";
-			}
 			m_logger.debug(
 					"Invoking method in {} transaction: {}, method: {}, args: {}",
 					new Object[] {
-							kind,
+							transactionKind,
 							transaction.getId(),
 							invocation.getMethod().toGenericString(),
 							Arrays.asList(invocation.getArguments()) });
