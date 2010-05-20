@@ -18,7 +18,7 @@ package com.xemantic.tadedon.guice.persistence;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * Transaction context. This object is passed to {@link TransactionFinalizer}.
+ * Transaction context. This object is passed to {@link TransactionSupport}.
  * <p>
  * Created on Apr 28, 2010
  *
