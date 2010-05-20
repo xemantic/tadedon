@@ -50,7 +50,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <gwt.version>2.0.3</gwt.version>
     <guice.version>2.0</guice.version>
-    <logback.version>0.9.20</logback.version>
+    <logback.version>0.9.21</logback.version>
   </properties>
   <modules>
   	<module>tadedon-guice-utils</module>
