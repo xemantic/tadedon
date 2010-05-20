@@ -41,9 +41,11 @@
       <artifactId>javax.persistence</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
+
+    <!-- dependencies with scope test -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
