@@ -26,9 +26,6 @@
   <artifactId>tadedon-logging</artifactId>
   <name>tadedon-logging</name>
   <description>logback, sl4j and jul initializer</description>
-  <properties>
-    <slf4j.version>1.6.0</slf4j.version>
-  </properties>
   <dependencies>
   	<dependency>
       <groupId>org.slf4j</groupId>
