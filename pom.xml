@@ -121,7 +121,7 @@
     <dependencies>
       <dependency>
         <groupId>com.xemantic.tadedon</groupId>
-        <artifactId>tadedon-guice-logging</artifactId>
+        <artifactId>tadedon-logging</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -193,18 +193,17 @@
         <version>${slf4j.version}</version>
       </dependency>
       <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+      <dependency>
         <groupId>javax.annotation</groupId>
         <artifactId>jsr250-api</artifactId>
         <version>1.0</version>
       </dependency>
-
       <!-- dependencies with scope test -->
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logback.version}</version>
-        <scope>test</scope>
-      </dependency>
+
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
