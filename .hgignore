@@ -3,3 +3,5 @@ syntax: regexp
 ^tadedon-guice-utils/target$
 syntax: regexp
 ^tadedon-guice-persistence/target$
+syntax: regexp
+^tadedon-logging/target$
