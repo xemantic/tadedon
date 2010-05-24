@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ import com.xemantic.tadedon.guice.persistence.testdata.Customer;
 import com.xemantic.tadedon.guice.persistence.testdata.CustomerService;
 import com.xemantic.tadedon.guice.persistence.testdata.CustomerStore;
 import com.xemantic.tadedon.guice.persistence.testdata.RequestedRollbackService;
+import com.xemantic.tadedon.logging.Loggers;
 
 /**
  * Unit tests for {@link PersistenceModule}.
@@ -47,6 +49,12 @@ import com.xemantic.tadedon.guice.persistence.testdata.RequestedRollbackService;
  * @author hshsce
  */
 public class PersistenceModuleTest {
+
+	/** Initializes logging. */
+	@BeforeClass
+	public static void initializeLogging() {
+		Loggers.initialize();
+	}
 
 	/** Tests {@link CustomerService#capitalizeCustomerName(Customer)} method. */
 	@Test
