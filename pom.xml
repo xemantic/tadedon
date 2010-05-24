@@ -54,9 +54,9 @@
     <slf4j.version>1.6.0</slf4j.version>
   </properties>
   <modules>
+    <module>tadedon-logging</module>
   	<module>tadedon-guice-utils</module>
   	<module>tadedon-guice-persistence</module>
-  	<module>tadedon-logging</module>
   </modules>
   <build>
     <plugins>
@@ -119,6 +119,11 @@
   </scm>
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.xemantic.tadedon</groupId>
+        <artifactId>tadedon-guice-logging</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>com.xemantic.tadedon</groupId>
         <artifactId>tadedon-guice-utils</artifactId>
