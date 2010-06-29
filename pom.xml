@@ -57,6 +57,7 @@
     <module>tadedon-logging</module>
   	<module>tadedon-guice-utils</module>
   	<module>tadedon-guice-persistence</module>
+    <module>tadedon-guava</module>
   </modules>
   <build>
     <plugins>
