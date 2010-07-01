@@ -50,7 +50,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <gwt.version>2.0.3</gwt.version>
     <guice.version>2.0</guice.version>
-    <logback.version>0.9.21</logback.version>
+    <logback.version>0.9.24</logback.version>
     <slf4j.version>1.6.0</slf4j.version>
   </properties>
   <modules>
