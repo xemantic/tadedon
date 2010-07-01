@@ -15,6 +15,8 @@
  */
 package com.xemantic.tadadon.guava.base;
 
+import static org.junit.Assert.*;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -49,6 +51,21 @@ public class MemoizingSupplierTest {
 
 		// then
 		Assert.assertSame(instance, suppliedInstance);
+	}
+
+	/** Test of {@link MemoizingSupplier#get()}. */
+	@Test
+	public void shouldReturnTheSameInstanceOnSubsequentCalls() {
+		// given
+		Object instance = new Object();
+		MemoizingSupplier<Object> supplier = new MemoizingSupplier<Object>(Suppliers.ofInstance(instance));
+
+		// when
+		Object supplied1 = supplier.get();
+		Object supplied2 = supplier.get();
+
+		// then
+		assertTrue("Supplied instances should equal", supplied1 == supplied2);
 	}
 
 }
