@@ -15,7 +15,9 @@
  */
 package com.xemantic.tadedon.logging;
 
-import java.util.logging.Level;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.logging.LogManager;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -35,11 +37,26 @@ public final class Loggers {
 	private Loggers() { /* util class, non-instantiable */ }
 
 	/**
-	 * Initializes jul logger to forward everything to slf4j, and prints logback status.
+	 * Disables JUL console logging and redirects all logs to SLF4J.
+	 * It sets JUL's root level logger to level {@code ALL}. It is achieved
+	 * by passing {@code .level=ALL} line as the only option of JUL configuration.
+	 *
+	 * @see LogManager#readConfiguration(java.io.InputStream)
+	 * @see SLF4JBridgeHandler#install()
 	 */
-	public static void initialize() {
-		java.util.logging.Logger.getLogger("").setLevel(Level.ALL);
+	public static void redirectJulToSLF4J() {
+		try {
+			LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(".level=ALL".getBytes()));
+		} catch (IOException e) {
+			throw new RuntimeException("Should hever happen - memory based streams", e);
+		}
 		SLF4JBridgeHandler.install();
+	}
+
+	/**
+	 * Prints logback status.
+	 */
+	public static void printLogbackStatus() {
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		StatusPrinter.print(lc);
 	}
