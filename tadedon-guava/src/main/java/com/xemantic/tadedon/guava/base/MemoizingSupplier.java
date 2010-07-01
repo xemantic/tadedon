@@ -34,6 +34,7 @@ import com.google.common.base.Suppliers;
  * Created on Jun 24, 2010
  *
  * @author hshsce
+ * @param <T> type instance returned by supplier.
  * @see Suppliers#memoize(Supplier)
  */
 public class MemoizingSupplier<T> implements Supplier<T> {
@@ -69,6 +70,7 @@ public class MemoizingSupplier<T> implements Supplier<T> {
 				instance = m_reference.get();
 				if (instance == null) { // instance could be already provided by other thread
 					instance = m_deletage.get();
+					m_reference.set(instance);
 				}
 			} finally {
 				m_lock.unlock();
