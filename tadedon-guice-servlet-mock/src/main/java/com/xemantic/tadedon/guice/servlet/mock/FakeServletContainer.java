@@ -74,7 +74,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
  *     }
  *
  * }
- * <pre>
+ * </pre>
  * Created on Jul 2, 2010
  *
  * @author hshsce
