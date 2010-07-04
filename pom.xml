@@ -56,10 +56,10 @@
   </properties>
   <modules>
     <module>tadedon-logging</module>
+    <module>tadedon-guava</module>
   	<module>tadedon-guice-utils</module>
   	<module>tadedon-guice-persistence</module>
-    <module>tadedon-guava</module>
-    <!-- <module>tadedon-guice-servlet-mock</module> -->
+    <module>tadedon-guice-servlet-mock</module>
   </modules>
   <build>
     <plugins>
