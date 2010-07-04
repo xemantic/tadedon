@@ -47,7 +47,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
  *
  *     private static FakeServletContainer servletContainer;
  *
- *    {@literal @BeforeClass}
+ *     {@literal @BeforeClass}
  *     public static void startServletContainer() throws ServletException {
  *         injector = Guice.createInjector(
  *              new ServletModule(),
@@ -58,7 +58,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
  *         servletContainer.start(); // you can provide ServletContext here
  *     }
  *
- *    {@literal @Test}
+ *     {@literal @Test}
  *     public void shouldDoSomethingOnMyServlet() throws IOException {
  *         // given
  *         MyServlet servlet = injector.getInstance(MyServlet.class);
@@ -66,7 +66,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
  *         ...
  *     }
  *
- *    {@literal @AfterClass}
+ *     {@literal @AfterClass}
  *     public static void stopServletContainer() {
  *         if (servletContainer != null) {
  *             servletContainer.stop();
