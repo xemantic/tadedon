@@ -51,7 +51,7 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		final Object result;
 		Transaction transaction = m_transactionManager.getLocalTransaction();
-		if (m_transactionManager.getLocalTransaction() == null) {
+		if (transaction == null) {
 			transaction = m_transactionManager.newLocalTransaciton();
 			try {
 				logMethodInvocation("new", transaction, invocation);
@@ -92,7 +92,7 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 					}
 				}
 			} catch (Throwable t) {
-				if (context.m_throwable == null) {
+				if (context.m_throwable == null) { // we are already throwing
 					throw t;
 				} else {
 					m_logger.error("Exception occured while finishing transaction", t);
