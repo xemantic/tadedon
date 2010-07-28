@@ -24,8 +24,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import com.google.inject.PrivateBinder;
-import com.google.inject.Singleton;
 
 /**
  * Guice module enabling interceptors of {@literal @}{@link Transactional} annotation.
@@ -43,25 +43,28 @@ import com.google.inject.Singleton;
  */
 public class PersistenceModule extends AbstractModule {
 
-	private final Class<? extends TransactionSupport> m_transactionSupportClass;
+	private final Module m_transactionSupportModule;
 
 	/**
 	 * Creates new persistence module using {@link DefaultTransactionSupport}.
 	 */
 	public PersistenceModule() {
-		this(DefaultTransactionSupport.class);
+		this(new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind(TransactionSupport.class).to(DefaultTransactionSupport.class);
+			}
+		});
 	}
 
 	/**
-	 * Creates new persistence module using given transaction support.
-	 * <p>
-	 * Note: the transaction support class should be annotated with appropriate scope where
-	 * {@literal @}{@link Singleton} seems the most appropriate.
+	 * Creates new persistence module using {@link TransactionSupport} provided
+	 * in the private {transactionSupportModule}
 	 *
-	 * @param transactionSupportClass the transaction support class.
+	 * @param transactionSupportModule private module which must bind {@link TransactionSupport}.
 	 */
-	public PersistenceModule(Class<? extends TransactionSupport> transactionSupportClass) {
-		m_transactionSupportClass = transactionSupportClass;
+	public PersistenceModule(Module transactionSupportModule) {
+		m_transactionSupportModule = transactionSupportModule;
 	}
 
 	/** {@inheritDoc} */
@@ -70,7 +73,7 @@ public class PersistenceModule extends AbstractModule {
 		requireBinding(EntityManagerFactory.class);
 		TransactionalMethodInterceptor interceptor = new TransactionalMethodInterceptor();
 		PrivateBinder privBinder = binder().newPrivateBinder();
-		privBinder.bind(TransactionSupport.class).to(m_transactionSupportClass);
+		privBinder.install(m_transactionSupportModule);
 		privBinder.requestInjection(interceptor);
 		bindInterceptor(superAnnotatedWith(Transactional.class), any(), interceptor);
 		bindInterceptor(any(), superAnnotatedWith(Transactional.class), interceptor);
