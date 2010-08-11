@@ -17,39 +17,44 @@ package com.xemantic.tadedon.guice.matcher;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
+
+import org.springframework.core.annotation.AnnotationUtils;
+
+import com.google.inject.TypeLiteral;
 
 /**
- *
+ * 
  * <p>
- * Created on Feb 25, 2010
+ * Created on Aug 9, 2010
  *
  * @author hshsce
  */
-public class AnnotationTypeMatcher extends AbstractAnnotationTypeMatcher<AnnotatedElement> implements Serializable {
+public class TypeLiteralAnnotationMatcher extends AbstractAnnotationMatcher<TypeLiteral<?>> implements Serializable {
 
-	private static final long serialVersionUID = -5607162731470802707L;
+	private static final long serialVersionUID = -2072938744550692615L;
 
 
 	/**
 	 * Creates annotation matcher.
 	 *
-	 * @param annotationType the annotation type to match against.
+	 * @param annotation the annotation to match against.
 	 */
-	public AnnotationTypeMatcher(Class<? extends Annotation> annotationType) {
-		super(annotationType);
+	public TypeLiteralAnnotationMatcher(Annotation annotation) {
+		super(annotation);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean matches(AnnotatedElement element) {
-		return (Annotations.findAnnotation(element, m_annotationType) != null);
+	public boolean matches(TypeLiteral<?> element) {
+		Annotation annotation = AnnotationUtils.findAnnotation(element.getRawType(), m_annotation.annotationType());
+		return ((annotation != null) && m_annotation.equals(annotation));
 	}
+
 
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "superAnnotatedWith(" + m_annotationType + ".class)";
+		return "typeAnnotatedWith(" + m_annotation + ")";
 	}
 
 }

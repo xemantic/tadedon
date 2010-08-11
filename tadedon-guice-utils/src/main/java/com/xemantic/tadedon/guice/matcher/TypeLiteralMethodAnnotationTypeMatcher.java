@@ -17,18 +17,22 @@ package com.xemantic.tadedon.guice.matcher;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+
+import org.springframework.core.annotation.AnnotationUtils;
+
+import com.google.inject.TypeLiteral;
 
 /**
- *
+ * Matcher w
  * <p>
- * Created on Feb 25, 2010
+ * Created on Aug 10, 2010
  *
  * @author hshsce
  */
-public class AnnotationTypeMatcher extends AbstractAnnotationTypeMatcher<AnnotatedElement> implements Serializable {
+public class TypeLiteralMethodAnnotationTypeMatcher extends AbstractAnnotationTypeMatcher<TypeLiteral<?>> implements Serializable {
 
-	private static final long serialVersionUID = -5607162731470802707L;
+	private static final long serialVersionUID = -3338703060117277662L;
 
 
 	/**
@@ -36,20 +40,29 @@ public class AnnotationTypeMatcher extends AbstractAnnotationTypeMatcher<Annotat
 	 *
 	 * @param annotationType the annotation type to match against.
 	 */
-	public AnnotationTypeMatcher(Class<? extends Annotation> annotationType) {
+	public TypeLiteralMethodAnnotationTypeMatcher(Class<? extends Annotation> annotationType) {
 		super(annotationType);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean matches(AnnotatedElement element) {
-		return (Annotations.findAnnotation(element, m_annotationType) != null);
+	public boolean matches(TypeLiteral<?> element) {
+		Method[] methods = element.getRawType().getMethods();
+		boolean matches = false;
+		for (Method method : methods) {
+			Annotation annotation = AnnotationUtils.findAnnotation(method, m_annotationType);
+			if (annotation != null) {
+				matches = true;
+				break;
+			}
+		}
+		return matches;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "superAnnotatedWith(" + m_annotationType + ".class)";
+		return "methodAnnotatedWith(" + m_annotationType + ".class)";
 	}
 
 }

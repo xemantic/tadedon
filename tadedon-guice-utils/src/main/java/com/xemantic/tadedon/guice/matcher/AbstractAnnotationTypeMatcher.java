@@ -19,42 +19,38 @@ import static com.google.inject.internal.Preconditions.*;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 
 import com.google.inject.matcher.AbstractMatcher;
+import com.google.inject.matcher.Matcher;
 
 /**
- *
+ * Base class for annotation {@link Matcher}s.
  * <p>
- * Created on Feb 25, 2010
+ * Created on Aug 10, 2010
  *
  * @author hshsce
  */
-public class AnnotationMatcher extends AbstractAnnotationMatcher<AnnotatedElement> implements Serializable {
+public abstract class AbstractAnnotationTypeMatcher<T> extends AbstractMatcher<T> {
 
-	private static final long serialVersionUID = 1495156330223672414L;
+	protected final Class<? extends Annotation> m_annotationType;
 
 
-	/**
-	 * Creates annotation matcher.
-	 *
-	 * @param annotation the annotation to match against.
-	 */
-	public AnnotationMatcher(Annotation annotation) {
-		super(annotation);
+	protected AbstractAnnotationTypeMatcher(Class<? extends Annotation> annotationType) {
+		m_annotationType = checkNotNull(annotationType, "annotationType");
+		Annotations.checkForRuntimeRetention(m_annotationType);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean matches(AnnotatedElement element) {
-		Annotation annotation = Annotations.findAnnotation(element, m_annotation.annotationType());
-		return ((annotation != null) && m_annotation.equals(annotation));
+	public int hashCode() {
+		return 37 * m_annotationType.hashCode();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String toString() {
-		return "superAnnotatedWith(" + m_annotation + ")";
+	public boolean equals(Object other) {
+		return ((other.getClass().equals(getClass()))
+				&& ((AbstractAnnotationTypeMatcher<?>) other).m_annotationType.equals(m_annotationType));
 	}
 
 }

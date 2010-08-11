@@ -15,16 +15,10 @@
  */
 package com.xemantic.tadedon.guice.matcher;
 
-import static com.google.inject.internal.Preconditions.*;
-
 import java.lang.annotation.Annotation;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
 
-import org.springframework.core.annotation.AnnotationUtils;
-
+import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matcher;
 
 /**
@@ -46,7 +40,7 @@ public final class AnnotationMatchers {
 	 * @param annotationType the annotation type.
 	 * @return the matcher.
 	 */
-	public static Matcher<AnnotatedElement> superAnnotatedWith(final Class<? extends Annotation> annotationType) {
+	public static Matcher<AnnotatedElement> superAnnotatedWith(Class<? extends Annotation> annotationType) {
 		return new AnnotationTypeMatcher(annotationType);
 	}
 
@@ -58,40 +52,52 @@ public final class AnnotationMatchers {
 	 * @param annotation the annotation instance.
 	 * @return the matcher.
 	 */
-	public static Matcher<AnnotatedElement> superAnnotatedWith(final Annotation annotation) {
+	public static Matcher<AnnotatedElement> superAnnotatedWith(Annotation annotation) {
 		return new AnnotationMatcher(annotation);
 	}
 
 	/**
-	 * Check if given {@code annotationType} has {@link Retention} set to {@link RetentionPolicy#RUNTIME}.
+	 * Returns a matcher which matches {@link TypeLiteral}'s raw type
+	 * with a given {@code annotationType}.
 	 *
-	 * @param annotationType the annotation type to check.
+	 * @param annotation the annotation instance.
+	 * @return the matcher.
 	 */
-	public static void checkForRuntimeRetention(Class<? extends Annotation> annotationType) {
-		Retention retention = annotationType.getAnnotation(Retention.class);
-		checkArgument(
-				((retention != null) && (retention.value() == RetentionPolicy.RUNTIME)),
-				"Annotation %s is missing RUNTIME retention", annotationType.getSimpleName());
+	public static Matcher<TypeLiteral<?>> typeAnnotatedWith(Class<? extends Annotation> annotationType) {
+		return new TypeLiteralAnnotationTypeMatcher(annotationType);
 	}
 
 	/**
-	 * Finds if the {@code element} is annotated with the {@code annotationType}.
+	 * Returns a matcher which matches {@link TypeLiteral} raw type's methods
+	 * with a given {@code annotationType}.
 	 *
-	 * @param element the element
-	 * @param annotationType the annotation type.
-	 * @return annotation instance or {@code null} if no annotation is found.
-	 * @throws IllegalArgumentException if the {@code element} is not instance of {@link Class} or {@link Method}.
+	 * @param annotation the annotation instance.
+	 * @return the matcher.
 	 */
-	public static Annotation findAnnotation(AnnotatedElement element, Class<? extends Annotation> annotationType) {
-		final Annotation annotation;
-		if (element instanceof Class<?>) {
-			annotation = AnnotationUtils.findAnnotation((Class<?>) element, annotationType);
-		} else if (element instanceof Method) {
-			annotation = AnnotationUtils.findAnnotation((Method) element, annotationType);
-		} else {
-			throw new IllegalArgumentException("element must be instance of Class or Method");
-		}
-		return annotation;
+	public static Matcher<TypeLiteral<?>> typeAnnotatedWith(Annotation annotation) {
+		return new TypeLiteralAnnotationMatcher(annotation);
+	}
+
+	/**
+	 * Returns a matcher which matches {@link TypeLiteral}'s raw type methods
+	 * with a given {@code annotation}.
+	 *
+	 * @param annotation the annotation instance.
+	 * @return the matcher.
+	 */
+	public static Matcher<TypeLiteral<?>> methodAnnotatedWith(Class<? extends Annotation> annotationType) {
+		return new TypeLiteralMethodAnnotationTypeMatcher(annotationType);
+	}
+
+	/**
+	 * Returns a matcher which matches {@link TypeLiteral}'s raw type methods
+	 * with a given {@code annotation}.
+	 *
+	 * @param annotation the annotation instance.
+	 * @return the matcher.
+	 */
+	public static Matcher<TypeLiteral<?>> methodAnnotatedWith(Annotation annotation) {
+		return new TypeLiteralMethodAnnotationMatcher(annotation);
 	}
 
 }
