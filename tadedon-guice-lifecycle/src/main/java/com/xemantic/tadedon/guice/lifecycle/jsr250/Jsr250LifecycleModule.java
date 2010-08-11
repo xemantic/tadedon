@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Binder;
 import com.google.inject.PrivateBinder;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
@@ -42,15 +43,16 @@ public class Jsr250LifecycleModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		PrivateBinder privBinder = binder().newPrivateBinder();
+
+		LinkedBlockingDeque<Object> destroyableObjects = new LinkedBlockingDeque<Object>();
 		privBinder.bind(new TypeLiteral<Deque<Object>>() {})
 					.annotatedWith(Names.named("destroyableObjects"))
-					.toInstance(new LinkedBlockingDeque<Object>());
+					.toInstance(destroyableObjects);
 		privBinder.bind(PostConstructInvoker.class);
 
 		PostConstructAnnotatedTypeListener postConstructListener = new PostConstructAnnotatedTypeListener();
 		privBinder.requestInjection(postConstructListener);
-		PreDestroyAnnotatedTypeListener preDestroyListener = new PreDestroyAnnotatedTypeListener();
-		privBinder.requestInjection(preDestroyListener);
+		PreDestroyAnnotatedTypeListener preDestroyListener = new PreDestroyAnnotatedTypeListener(destroyableObjects);
 
 		privBinder.bind(LifecycleManager.class).to(Jsr250LifecycleManager.class);
 

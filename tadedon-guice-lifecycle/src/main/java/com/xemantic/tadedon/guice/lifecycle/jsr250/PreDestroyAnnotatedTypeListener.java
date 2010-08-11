@@ -33,9 +33,12 @@ import com.google.inject.spi.TypeListener;
  */
 public class PreDestroyAnnotatedTypeListener implements TypeListener {
 
-	@Inject
-	@Named("destroyableObjects")
-	private Deque<Object> m_destroyableObjects;
+	private final Deque<Object> m_destroyableObjects;
+
+
+	public PreDestroyAnnotatedTypeListener(Deque<Object> destroyableObjects) {
+		m_destroyableObjects = destroyableObjects;
+	}
 
 	private InjectionListener<Object> m_injectionListener = new InjectionListener<Object>() {
 		@Override
