@@ -15,7 +15,6 @@
  */
 package com.xemantic.tadedon.guice.lifecycle.jsr250;
 
-import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
@@ -30,13 +29,17 @@ import com.google.inject.spi.TypeListener;
  */
 public class PostConstructAnnotatedTypeListener implements TypeListener {
 
-	@Inject
-	private PostConstructInvoker m_initializer;
+	private final PostConstructInvoker m_postConstructInvoker;
+
+
+	public PostConstructAnnotatedTypeListener(PostConstructInvoker postConstructInvoker) {
+		m_postConstructInvoker = postConstructInvoker;		
+	}
 
 	private InjectionListener<Object> m_injectionListener = new InjectionListener<Object>() {
 		@Override
 		public void afterInjection(Object injectee) {
-			m_initializer.addObject(injectee);
+			m_postConstructInvoker.addObject(injectee);
 		}
 	};
 
