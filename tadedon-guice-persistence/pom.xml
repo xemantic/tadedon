@@ -25,7 +25,6 @@
   </parent>
   <artifactId>tadedon-guice-persistence</artifactId>
   <name>tadedon-guice-persistence</name>
-  <packaging>jar</packaging>
   <description>@Transactional annotation support</description>
   <dependencies>
     <dependency>
