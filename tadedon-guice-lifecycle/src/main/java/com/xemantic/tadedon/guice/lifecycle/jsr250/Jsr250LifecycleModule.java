@@ -15,7 +15,7 @@
  */
 package com.xemantic.tadedon.guice.lifecycle.jsr250;
 
-import static com.xemantic.tadedon.guice.matcher.AnnotationMatchers.methodAnnotatedWith;
+import static com.xemantic.tadedon.guice.matcher.AnnotationMatchers.*;
 
 import java.util.Deque;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -24,7 +24,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Binder;
 import com.google.inject.PrivateBinder;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
@@ -44,14 +43,16 @@ public class Jsr250LifecycleModule extends AbstractModule {
 	protected void configure() {
 		PrivateBinder privBinder = binder().newPrivateBinder();
 
+		PostConstructInvoker postConstructInvoker = new PostConstructInvoker();
+		privBinder.bind(PostConstructInvoker.class).toInstance(postConstructInvoker);
+
 		LinkedBlockingDeque<Object> destroyableObjects = new LinkedBlockingDeque<Object>();
 		privBinder.bind(new TypeLiteral<Deque<Object>>() {})
 					.annotatedWith(Names.named("destroyableObjects"))
 					.toInstance(destroyableObjects);
-		privBinder.bind(PostConstructInvoker.class);
 
-		PostConstructAnnotatedTypeListener postConstructListener = new PostConstructAnnotatedTypeListener();
-		privBinder.requestInjection(postConstructListener);
+
+		PostConstructAnnotatedTypeListener postConstructListener = new PostConstructAnnotatedTypeListener(postConstructInvoker);
 		PreDestroyAnnotatedTypeListener preDestroyListener = new PreDestroyAnnotatedTypeListener(destroyableObjects);
 
 		privBinder.bind(LifecycleManager.class).to(Jsr250LifecycleManager.class);
