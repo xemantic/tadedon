@@ -19,6 +19,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.springframework.core.annotation.AnnotationUtils;
+
 /**
  * 
  * <p>
@@ -35,7 +37,7 @@ public class Jsr250Utils {
 		for (Object object : objects) {
 			Method[] methods = object.getClass().getMethods();
 			for (Method method : methods) {
-				if (method.getAnnotation(jsr250Annotation) != null) {
+				if (AnnotationUtils.findAnnotation(method, jsr250Annotation) != null) {
 					try {
 						method.invoke(object);
 					} catch (IllegalArgumentException e) {
