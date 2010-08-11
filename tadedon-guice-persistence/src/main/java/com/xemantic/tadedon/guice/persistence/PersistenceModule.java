@@ -24,8 +24,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.PrivateBinder;
+import com.google.inject.Provider;
+import com.google.inject.TypeLiteral;
+import com.google.inject.util.Types;
 
 /**
  * Guice module enabling interceptors of {@literal @}{@link Transactional} annotation.
@@ -70,7 +74,7 @@ public class PersistenceModule extends AbstractModule {
 	/** {@inheritDoc} */
 	@Override
 	protected void configure() {
-		requireBinding(EntityManagerFactory.class);
+		requireBinding(Key.get(Types.providerOf(EntityManagerFactory.class)));
 		TransactionalMethodInterceptor interceptor = new TransactionalMethodInterceptor();
 		PrivateBinder privBinder = binder().newPrivateBinder();
 		privBinder.install(m_transactionSupportModule);
