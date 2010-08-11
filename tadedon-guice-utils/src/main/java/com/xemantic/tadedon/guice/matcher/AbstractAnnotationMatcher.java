@@ -15,41 +15,41 @@
  */
 package com.xemantic.tadedon.guice.matcher;
 
-import java.io.Serializable;
+import static com.google.inject.internal.Preconditions.*;
+
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
+
+import com.google.inject.matcher.AbstractMatcher;
+import com.google.inject.matcher.Matcher;
 
 /**
- *
+ * Base class for annotation {@link Matcher}s.
  * <p>
- * Created on Feb 25, 2010
+ * Created on Aug 10, 2010
  *
  * @author hshsce
  */
-public class AnnotationTypeMatcher extends AbstractAnnotationTypeMatcher<AnnotatedElement> implements Serializable {
+public abstract class AbstractAnnotationMatcher<T> extends AbstractMatcher<T> {
 
-	private static final long serialVersionUID = -5607162731470802707L;
+	protected final Annotation m_annotation;
 
 
-	/**
-	 * Creates annotation matcher.
-	 *
-	 * @param annotationType the annotation type to match against.
-	 */
-	public AnnotationTypeMatcher(Class<? extends Annotation> annotationType) {
-		super(annotationType);
+	protected AbstractAnnotationMatcher(Annotation annotation) {
+		m_annotation = checkNotNull(annotation, "annotation");
+		Annotations.checkForRuntimeRetention(m_annotation.annotationType());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean matches(AnnotatedElement element) {
-		return (Annotations.findAnnotation(element, m_annotationType) != null);
+	public int hashCode() {
+		return 37 * m_annotation.hashCode();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String toString() {
-		return "superAnnotatedWith(" + m_annotationType + ".class)";
+	public boolean equals(Object other) {
+		return ((other.getClass().equals(getClass()))
+				&& ((AbstractAnnotationMatcher<?>) other).m_annotation.equals(m_annotation));
 	}
 
 }

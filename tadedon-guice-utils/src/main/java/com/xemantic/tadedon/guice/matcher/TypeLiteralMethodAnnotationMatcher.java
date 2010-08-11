@@ -15,24 +15,25 @@
  */
 package com.xemantic.tadedon.guice.matcher;
 
-import static com.google.inject.internal.Preconditions.*;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
 
-import com.google.inject.matcher.AbstractMatcher;
+import org.springframework.core.annotation.AnnotationUtils;
+
+import com.google.inject.TypeLiteral;
 
 /**
- *
+ * 
  * <p>
- * Created on Feb 25, 2010
+ * Created on Aug 10, 2010
  *
  * @author hshsce
+ *
  */
-public class AnnotationMatcher extends AbstractAnnotationMatcher<AnnotatedElement> implements Serializable {
+public class TypeLiteralMethodAnnotationMatcher extends AbstractAnnotationMatcher<TypeLiteral<?>> implements Serializable {
 
-	private static final long serialVersionUID = 1495156330223672414L;
+	private static final long serialVersionUID = 246887241323504676L;
 
 
 	/**
@@ -40,21 +41,26 @@ public class AnnotationMatcher extends AbstractAnnotationMatcher<AnnotatedElemen
 	 *
 	 * @param annotation the annotation to match against.
 	 */
-	public AnnotationMatcher(Annotation annotation) {
+	public TypeLiteralMethodAnnotationMatcher(Annotation annotation) {
 		super(annotation);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean matches(AnnotatedElement element) {
-		Annotation annotation = Annotations.findAnnotation(element, m_annotation.annotationType());
-		return ((annotation != null) && m_annotation.equals(annotation));
+	public boolean matches(TypeLiteral<?> element) {
+		Method[] methods = element.getRawType().getMethods();
+		boolean matches = false;
+		for (Method method : methods) {
+			Annotation annotation = AnnotationUtils.findAnnotation(method, m_annotation.annotationType());
+			return ((annotation != null) && m_annotation.equals(annotation));
+		}
+		return matches;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "superAnnotatedWith(" + m_annotation + ")";
+		return "methodAnnotatedWith(" + m_annotation + ")";
 	}
 
 }

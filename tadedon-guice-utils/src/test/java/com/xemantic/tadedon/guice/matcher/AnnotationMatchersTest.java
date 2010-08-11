@@ -17,6 +17,7 @@ package com.xemantic.tadedon.guice.matcher;
 
 import static org.junit.Assert.*;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -25,6 +26,7 @@ import javax.annotation.security.RolesAllowed;
 
 import org.junit.Test;
 
+import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matcher;
 import com.google.inject.matcher.Matchers;
 
@@ -207,16 +209,101 @@ public class AnnotationMatchersTest {
 		assertFalse("should not match annotation", matches);
 	}
 
-	/** Tests {@link AnnotationMatchers#checkForRuntimeRetention(Class)}. */
-	@Test(expected=IllegalArgumentException.class)
-	public void shouldThrowIllegalArgumentExceptionDueToMissingRuntimeRetention() {
-		AnnotationMatchers.checkForRuntimeRetention(Override.class);
+	/** Tests {@link AnnotationMatchers#type}. */
+	@Test
+	public void shouldMatchTypeLiteralAnnotationByType() {
+		//given
+		Matcher<TypeLiteral<?>> matcher = AnnotationMatchers.typeAnnotatedWith(RolesAllowed.class);
+		//when
+		boolean matches = matcher.matches(new TypeLiteral<FooService>() {});
+		//then
+		assertTrue("should match annotation", matches);
 	}
 
-	/** Tests {@link AnnotationMatchers#checkForRuntimeRetention(Class)}. */
+	/** Tests {@link AnnotationMatchers}. */
 	@Test
-	public void shouldVerifyRuntimeRetentionOnGivenAnnotation() {
-		AnnotationMatchers.checkForRuntimeRetention(Documented.class);
+	public void shouldMatchSuperTypeLiteralAnnotationByType() {
+		//given
+		Matcher<TypeLiteral<?>> matcher = AnnotationMatchers.typeAnnotatedWith(RolesAllowed.class);
+		//when
+		boolean matches = matcher.matches(new TypeLiteral<DefaultFooService>() {});
+		//then
+		assertTrue("should match annotation", matches);
 	}
+
+	/** Tests {@link AnnotationMatchers}. */
+	@Test
+	public void shouldMatchTypeLiteralAnnotation() {
+		//given
+		Matcher<TypeLiteral<?>> matcher = AnnotationMatchers.typeAnnotatedWith(FooService.class.getAnnotation(RolesAllowed.class));
+		//when
+		boolean matches = matcher.matches(new TypeLiteral<FooService>() {});
+		//then
+		assertTrue("should match annotation", matches);
+	}
+
+	/** Tests {@link AnnotationMatchers}. */
+	@Test
+	public void shouldMatchSuperTypeLiteralAnnotation() {
+		//given
+		Matcher<TypeLiteral<?>> matcher = AnnotationMatchers.typeAnnotatedWith(FooService.class.getAnnotation(RolesAllowed.class));
+		//when
+		boolean matches = matcher.matches(new TypeLiteral<DefaultFooService>() {});
+		//then
+		assertTrue("should match annotation", matches);
+	}
+
+	/**
+	 * Tests {@link AnnotationMatchers}.
+	 *
+	 * @throws SecurityException should never happen.
+	 * @throws NoSuchMethodException should never happen.
+	 */
+	@Test
+	public void shouldMatchTypeLiteralMethodAnnotationByType() throws SecurityException, NoSuchMethodException {
+		//given
+		Matcher<TypeLiteral<?>> matcher = AnnotationMatchers.methodAnnotatedWith(RolesAllowed.class);
+		//when
+		boolean matches = matcher.matches(new TypeLiteral<FooService>() {});
+		//then
+		assertTrue("should match annotation", matches);
+	}
+
+	/**
+	 * Tests {@link AnnotationMatchers}.
+	 *
+	 * @throws SecurityException should never happen.
+	 * @throws NoSuchMethodException should never happen.
+	 */
+	@Test
+	public void shouldMatchSuperTypeLiteralMethodAnnotationByType() throws SecurityException, NoSuchMethodException {
+		//given
+		Matcher<TypeLiteral<?>> matcher = AnnotationMatchers.methodAnnotatedWith(RolesAllowed.class);
+		//when
+		boolean matches = matcher.matches(new TypeLiteral<DefaultFooService>() {});
+		//then
+		assertTrue("should match annotation", matches);
+	}
+
+	/**
+	 * Tests {@link AnnotationMatchers}.
+	 *
+	 * @throws SecurityException should never happen.
+	 * @throws NoSuchMethodException should never happen.
+	 */
+	@Test
+	public void shouldNotMatchTypeLiteralMethodAnnotationWhenDifferentAnnotationInstanceIsProvided() throws SecurityException, NoSuchMethodException {
+		//given
+		Method method = AnnotationMatchersTest.class.getMethod("rolesAllowedAnnotatedMethod");
+		Annotation methodAnnotation = method.getAnnotation(RolesAllowed.class);
+		Matcher<TypeLiteral<?>> matcher = AnnotationMatchers.methodAnnotatedWith(methodAnnotation);
+		//when
+		boolean matches = matcher.matches(new TypeLiteral<DefaultFooService>() {});
+		//then
+		assertFalse("should not match annotation", matches);
+	}
+
+	@RolesAllowed("different_role")
+	public void rolesAllowedAnnotatedMethod() { /* utility method used by test reflection to obtain annotation instance */ }
 
 }
