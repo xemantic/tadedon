@@ -15,6 +15,7 @@
  */
 package com.xemantic.tadedon.guice.lifecycle.jsr250;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.locks.Lock;
@@ -51,7 +52,7 @@ public class PostConstructInvoker {
 			if (!m_initialized) {
 				m_objects.add(object);
 			} else {
-				Jsr250Utils.invoke(PostConstruct.class, m_objects);
+				Jsr250Utils.invoke(PostConstruct.class, Arrays.asList(object));
 			}
 		} finally {
 			m_lock.unlock();
