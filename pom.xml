@@ -61,6 +61,7 @@
   	<module>tadedon-guice-persistence</module>
     <module>tadedon-guice-servlet-mock</module>
     <module>tadedon-guice-lifecycle</module>
+    <module>tadedon-gwt</module>
     <module>tadedon-gwt-dev</module>
   </modules>
   <build>
