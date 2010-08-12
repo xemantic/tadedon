@@ -24,6 +24,7 @@ import javax.persistence.EntityManagerFactory;
 import org.slf4j.Logger;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -36,7 +37,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultTransactionManager implements TransactionManager {
 
-	private final EntityManagerFactory m_entityManagerFactory;
+	private final Provider<EntityManagerFactory> m_entityManagerFactoryProvider;
 
 	private final AtomicLong m_transactionIdSequencer = new AtomicLong(1);
 
@@ -52,8 +53,8 @@ public class DefaultTransactionManager implements TransactionManager {
 	 * @param logger the logger.
 	 */
 	@Inject
-	public DefaultTransactionManager(EntityManagerFactory entityManagerFactory, Logger logger) {
-		m_entityManagerFactory = entityManagerFactory;
+	public DefaultTransactionManager(Provider<EntityManagerFactory> entityManagerFactoryProvider, Logger logger) {
+		m_entityManagerFactoryProvider = entityManagerFactoryProvider;
 		m_logger = logger;
 	}
 
@@ -66,7 +67,7 @@ public class DefaultTransactionManager implements TransactionManager {
 	/** {@inheritDoc} */
 	@Override
 	public Transaction newLocalTransaciton() {
-		final DefaultTransaction transaction = new DefaultTransaction(m_entityManagerFactory.createEntityManager());
+		final DefaultTransaction transaction = new DefaultTransaction(m_entityManagerFactoryProvider.get().createEntityManager());
 		m_localTransaction.set(transaction);
 		m_logger.debug("Transaction created, id: {}", transaction.getId());
 		return transaction;

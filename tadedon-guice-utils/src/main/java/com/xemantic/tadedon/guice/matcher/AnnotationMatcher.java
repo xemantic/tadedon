@@ -30,11 +30,10 @@ import com.google.inject.matcher.AbstractMatcher;
  *
  * @author hshsce
  */
-public class AnnotationMatcher extends AbstractMatcher<AnnotatedElement> implements Serializable {
+public class AnnotationMatcher extends AbstractAnnotationMatcher<AnnotatedElement> implements Serializable {
 
-	private static final long serialVersionUID = -6607326896141741434L;
+	private static final long serialVersionUID = 1495156330223672414L;
 
-	private final Annotation m_annotation;
 
 	/**
 	 * Creates annotation matcher.
@@ -42,20 +41,14 @@ public class AnnotationMatcher extends AbstractMatcher<AnnotatedElement> impleme
 	 * @param annotation the annotation to match against.
 	 */
 	public AnnotationMatcher(Annotation annotation) {
-		m_annotation = checkNotNull(annotation, "annotation");
+		super(annotation);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean matches(AnnotatedElement element) {
-		final Annotation annotation = AnnotationMatchers.findAnnotation(element, m_annotation.annotationType());
+		Annotation annotation = Annotations.findAnnotation(element, m_annotation.annotationType());
 		return ((annotation != null) && m_annotation.equals(annotation));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int hashCode() {
-		return 37 * m_annotation.hashCode();
 	}
 
 	/** {@inheritDoc} */
