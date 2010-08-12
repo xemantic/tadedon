@@ -51,7 +51,7 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		final Object result;
 		Transaction transaction = m_transactionManager.getLocalTransaction();
-		if (m_transactionManager.getLocalTransaction() == null) {
+		if (transaction == null) {
 			transaction = m_transactionManager.newLocalTransaciton();
 			try {
 				logMethodInvocation("new", transaction, invocation);
@@ -75,23 +75,32 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 			context.m_throwable = t;
 			throw t;
 		} finally {
-			EntityTransaction emTrx = em.getTransaction();
-			if ((!context.getTransaction().isRollbackRequested()) &&
-					m_transactionSupport.shouldCommit(context)) {
-				if (emTrx.isActive()) {
-					emTrx.commit();
+			try {
+				EntityTransaction emTrx = em.getTransaction();
+				if ((!context.getTransaction().isRollbackRequested()) &&
+						m_transactionSupport.shouldCommit(context)) {
+					if (emTrx.isActive()) {
+						emTrx.commit();
+					} else {
+						m_logger.error("EntityManager transaction is already inactive, cannot commit");
+					}
 				} else {
-					m_logger.error("EntityManager transaction is already inactive, cannot commit");
+					if (emTrx.isActive()) {
+						emTrx.rollback();
+					} else {
+						m_logger.error("EntityManager transaction is already inactive, cannot rollback");
+					}
 				}
-			} else {
-				if (emTrx.isActive()) {
-					emTrx.rollback();
+			} catch (Throwable t) {
+				if (context.m_throwable == null) { // we are already throwing
+					throw t;
 				} else {
-					m_logger.error("EntityManager transaction is already inactive, cannot rollback");
+					m_logger.error("Exception occured while finishing transaction", t);
 				}
 			}
 		}
 	}
+
 
 	private void logMethodInvocation(String transactionKind, Transaction transaction, MethodInvocation invocation) {
 		if (m_logger.isDebugEnabled()) {

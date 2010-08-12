@@ -15,13 +15,9 @@
  */
 package com.xemantic.tadedon.guice.matcher;
 
-import static com.google.inject.internal.Preconditions.*;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-
-import com.google.inject.matcher.AbstractMatcher;
 
 /**
  *
@@ -30,38 +26,24 @@ import com.google.inject.matcher.AbstractMatcher;
  *
  * @author hshsce
  */
-public class AnnotationTypeMatcher extends AbstractMatcher<AnnotatedElement> implements Serializable {
+public class AnnotationTypeMatcher extends AbstractAnnotationTypeMatcher<AnnotatedElement> implements Serializable {
 
-	private static final long serialVersionUID = 6191937886210143389L;
+	private static final long serialVersionUID = -5607162731470802707L;
 
-	private final Class<? extends Annotation> m_annotationType;
 
 	/**
 	 * Creates annotation matcher.
 	 *
 	 * @param annotationType the annotation type to match against.
 	 */
-	public AnnotationTypeMatcher(final Class<? extends Annotation> annotationType) {
-		m_annotationType = checkNotNull(annotationType, "annotation type");
+	public AnnotationTypeMatcher(Class<? extends Annotation> annotationType) {
+		super(annotationType);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean matches(AnnotatedElement element) {
-		return (AnnotationMatchers.findAnnotation(element, m_annotationType) != null);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean equals(final Object other) {
-		return ((other instanceof AnnotationTypeMatcher)
-				&& ((AnnotationTypeMatcher) other).m_annotationType.equals(m_annotationType));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int hashCode() {
-		return 37 * m_annotationType.hashCode();
+		return (Annotations.findAnnotation(element, m_annotationType) != null);
 	}
 
 	/** {@inheritDoc} */

@@ -53,7 +53,7 @@ public class PersistenceModuleTest {
 	/** Initializes logging. */
 	@BeforeClass
 	public static void initializeLogging() {
-		Loggers.initialize();
+		Loggers.redirectJulToSLF4J();
 	}
 
 	/** Tests {@link CustomerService#capitalizeCustomerName(Customer)} method. */
