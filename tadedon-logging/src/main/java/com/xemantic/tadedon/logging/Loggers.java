@@ -16,6 +16,7 @@
 package com.xemantic.tadedon.logging;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.LogManager;
 
@@ -23,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 
 /**
@@ -51,6 +54,19 @@ public final class Loggers {
 			throw new RuntimeException("Should hever happen - memory based streams", e);
 		}
 		SLF4JBridgeHandler.install();
+	}
+
+	public static void configureLogback(File confFile) {
+	    // assume SLF4J is bound to logback in the current environment
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        JoranConfigurator configurator = new JoranConfigurator();
+        configurator.setContext(lc);
+        try {
+            // the context was probably already configured by default configuration rules
+            configurator.doConfigure(confFile);
+        } catch (JoranException e) {
+            throw new RuntimeException("Cannot initialize logger", e);
+        }
 	}
 
 	/**
