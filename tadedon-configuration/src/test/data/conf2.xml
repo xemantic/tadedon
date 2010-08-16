@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- foo property comment -->
+  <foo>
+    <!-- foo internal comment -->
+    <someStructure>foo</someStructure>
+    <someStructure>
+      <evenMoreScructure>foo</evenMoreScructure>
+    </someStructure>
+  </foo>
+
+
+  <!-- bar property comment -->
+  <bar>
+    <!-- bar internal comment -->
+    <someStructure>bar</someStructure>
+    <someStructure>
+      <evenMoreScructure>bar</evenMoreScructure>
+    </someStructure>
+  </bar>
+
+</configuration>

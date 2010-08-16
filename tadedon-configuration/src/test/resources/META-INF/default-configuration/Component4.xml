@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- foo property comment -->
+  <foo>
+    <someStructure>foo</someStructure>
+    <someStructure>
+      <evenMoreScructure>foo</evenMoreScructure>
+    </someStructure>
+  </foo>
+  <!-- foo property comment -->
+  <bar>
+    <someStructure>bar</someStructure>
+    <someStructure>
+      <evenMoreScructure>bar</evenMoreScructure>
+    </someStructure>
+  </bar>
+</configuration>
