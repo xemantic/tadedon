@@ -58,6 +58,7 @@
     <module>tadedon-logging</module>
     <module>tadedon-guava</module>
     <module>tadedon-configuration</module>
+    <module>tadedon-servlet</module>
   	<module>tadedon-guice-utils</module>
     <module>tadedon-guice-servlet</module>
     <module>tadedon-guice-servlet-mock</module>
