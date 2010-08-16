@@ -15,13 +15,18 @@
  */
 package com.xemantic.tadedon.configuration;
 
+import static com.google.common.base.Preconditions.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.FileConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -30,6 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
 import com.xemantic.tadedon.guava.base.MoreResources;
@@ -80,6 +88,7 @@ public final class Configurations {
     }
 
     public static XMLConfiguration newXmlConfiguration(File confFile) {
+        checkArgument(confFile.exists(), "confFile %s does not exist", confFile);
         try {
             return new XMLConfiguration(confFile);
         } catch (ConfigurationException e) {
@@ -88,6 +97,7 @@ public final class Configurations {
     }
 
     public static PropertiesConfiguration newPropertiesConfiguration(File confFile) {
+        checkArgument(confFile.exists(), "confFile %s does not exist", confFile);
         try {
             return new PropertiesConfiguration(confFile);
         } catch (ConfigurationException e) {
@@ -101,6 +111,22 @@ public final class Configurations {
         } catch (ConfigurationException e) {
             throw new RuntimeException("Cannot create configuration", e);
         }
+    }
+
+    public static Properties toProperties(Configuration configuraton) {
+        Properties properties = new Properties();
+        for (@SuppressWarnings("unchecked") Iterator<String> iterator = configuraton.getKeys(); iterator.hasNext();) {
+            String key = iterator.next();
+            Object objValue = configuraton.getProperty(key);
+            String value;
+            if (objValue instanceof String) {
+                value = (String) objValue;
+            } else {
+                value = objValue.toString();
+            }
+            properties.setProperty(key, value);
+        }
+        return properties;
     }
 
     public static void mergeAllDefaults(File confDir) {
