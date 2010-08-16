@@ -25,7 +25,6 @@
   </parent>
   <artifactId>tadedon-guava</artifactId>
   <name>tadedon-guava</name>
-  <packaging>jar</packaging>
   <description>Extensions to Google guava</description>
   <dependencies>
     <dependency>
