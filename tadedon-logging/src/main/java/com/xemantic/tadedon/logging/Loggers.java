@@ -61,8 +61,9 @@ public final class Loggers {
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
         JoranConfigurator configurator = new JoranConfigurator();
         configurator.setContext(lc);
+        // the context was probably already configured by default configuration rules
+        lc.reset();
         try {
-            // the context was probably already configured by default configuration rules
             configurator.doConfigure(confFile);
         } catch (JoranException e) {
             throw new RuntimeException("Cannot initialize logger", e);
