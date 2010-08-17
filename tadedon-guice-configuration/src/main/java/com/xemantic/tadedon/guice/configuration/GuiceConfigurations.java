@@ -57,7 +57,7 @@ public final class GuiceConfigurations {
 
     public static void bindConfiguration(Binder binder, String confName, Configuration configuration) {
         int dotIndex = confName.lastIndexOf(".");
-        String confKey = confName.substring(0, dotIndex);
+        String confKey = confName.substring(0, dotIndex) + "Config";
         binder.bind(Configuration.class).annotatedWith(Names.named(confKey)).toInstance(configuration);
         if (configuration instanceof PropertiesConfiguration) {
             binder.bind(PropertiesConfiguration.class).annotatedWith(Names.named(confKey)).toInstance((PropertiesConfiguration) configuration);
