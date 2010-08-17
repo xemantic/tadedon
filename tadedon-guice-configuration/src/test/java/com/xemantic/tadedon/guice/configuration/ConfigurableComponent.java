@@ -48,11 +48,11 @@ public class ConfigurableComponent {
 
     @Inject
     public ConfigurableComponent(
-            @Named("conf1") Map<String, String> conf1Map,
-            @Named("conf1") Properties conf1Properties,
-            @Named("conf1") Configuration conf1Configuration,
-            @Named("conf2") Configuration conf2Configuration,
-            @Named("conf2") XMLConfiguration conf2XmlConfiguration) {
+            @Named("conf1Config") Map<String, String> conf1Map,
+            @Named("conf1Config") Properties conf1Properties,
+            @Named("conf1Config") Configuration conf1Configuration,
+            @Named("conf2Config") Configuration conf2Configuration,
+            @Named("conf2Config") XMLConfiguration conf2XmlConfiguration) {
 
         m_conf1Map = conf1Map;
         m_conf1Properties = conf1Properties;
