@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
@@ -50,6 +51,18 @@ public final class MoreResources {
         } catch (IOException e) {
             throw new RuntimeException("Cannot copy url: " + url + " to file: " + file, e);
         }        
+    }
+
+    public static boolean equal(URL url, File file) throws IOException {
+        return ByteStreams.equal(Resources.newInputStreamSupplier(url), Files.newInputStreamSupplier(file));
+    }
+
+    public static boolean equalRisky(URL url, File file) {
+        try {
+            return equal(url, file);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot compare url: " + url + " to file: " + file, e);
+        }
     }
 
     public static List<URL> getResources(String name) {
