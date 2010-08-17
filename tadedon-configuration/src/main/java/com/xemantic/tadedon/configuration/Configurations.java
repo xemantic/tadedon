@@ -39,6 +39,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.xemantic.tadedon.guava.base.MoreResources;
 
@@ -131,7 +133,7 @@ public final class Configurations {
 
     public static void mergeAllDefaults(File confDir) {
         LOG.info("Merging default configurations from classpath with configuraiton dir: {}", confDir);
-        Set<String> defaultConfigurations = Configurations.getDefaultConfigurations();
+        Set<String> defaultConfigurations = getDefaultConfigurations();
         LOG.debug("Default configuration sources: {}", defaultConfigurations);
         for (String confName : defaultConfigurations) {
             mergeDefaults(confDir, confName);
@@ -139,11 +141,10 @@ public final class Configurations {
     }
 
     public static void mergeDefaults(File confDir, String confName) {
-        LOG.debug("Merging configuration: {}", confName);
-        URL url = Configurations.getDefaultConfigurationUrl(confName);
+        URL url = getDefaultConfigurationUrl(confName);
         File confFile = new File(confDir, confName);
         if (confFile.exists()) {
-            Configurations.merge(url, confFile);
+            merge(url, confFile);
         } else {
             MoreResources.copyRisky(url, confFile);                
         }        
@@ -171,18 +172,21 @@ public final class Configurations {
     }
 
     public static void merge(URL defaultConfUrl, File confFile) {
-        LOG.debug("Merging {} <-> {}", defaultConfUrl, confFile);
         String confName = confFile.getName();
         if (confName.endsWith(".xml")) {
-            LOG.warn("Merging of XML files is unsupported at the moment, " +
-            		 "you have to adjust configuration file manually: {}", confFile);
+            if (MoreResources.equalRisky(defaultConfUrl, confFile)) {
+                LOG.warn("Not merging the same configs: {} <-> {} ", defaultConfUrl, confFile);
+            } else {
+                LOG.warn("Merging of XML files is unsupported at the moment, " +
+                        "you have to adjust configuration file manually: {}", confFile);
+            }
         } else if (confName.endsWith(".properties")) {
             merge(newPropertiesConfiguration(defaultConfUrl), newPropertiesConfiguration(confFile));
         }
     }
-
+ 
     public static void merge(PropertiesConfiguration defaultConf, PropertiesConfiguration conf){
-        LOG.debug("Merging configurations: {} <-> {}", defaultConf.getURL(), conf.getURL());
+        LOG.debug("Merging: {} <-> {}", defaultConf.getURL(), conf.getURL());
         for (@SuppressWarnings("unchecked") Iterator<String> iterator = defaultConf.getKeys(); iterator.hasNext();) {
             String key = iterator.next();
             if (!conf.containsKey(key)) {
