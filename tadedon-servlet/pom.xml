@@ -24,7 +24,8 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>tadedon-servlet</artifactId>
-  <name>servlet utilities</name>
+  <name>tadedon-servlet</name>
+  <description>servlet utilities</description>
   <dependencies>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -36,6 +37,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
