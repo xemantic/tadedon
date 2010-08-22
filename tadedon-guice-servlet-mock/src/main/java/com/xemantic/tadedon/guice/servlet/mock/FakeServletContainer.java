@@ -15,11 +15,20 @@
  */
 package com.xemantic.tadedon.guice.servlet.mock;
 
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicLong;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockFilterConfig;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletContext;
 
 import com.google.inject.Inject;
@@ -42,37 +51,43 @@ import com.google.inject.servlet.GuiceServletContextListener;
  * Typical usage in test class (junit):
  * <pre>
  * public class MyServletTest {
- *
- *     private static Injector injector;
- *
+ * 
  *     private static FakeServletContainer servletContainer;
- *
+ * 
  *     {@literal @BeforeClass}
  *     public static void startServletContainer() throws ServletException {
- *         injector = Guice.createInjector(
- *              new ServletModule(),
- *              new FakeServletContainerModule(),
- *              new ServletInterceptionModule());
- *
+ *         Injector injector = Guice.createInjector(
+ *                 new FakeServletContainerModule(),
+ *                 new ServletModule() {
+ *                     {@literal @Override}
+ *                     protected void configureServlets() {
+ *                         serve("/MyServlet").with(MyServlet.class);
+ *                     }
+ *                 });
  *         servletContainer = injector.getInstance(FakeServletContainer.class);
- *         servletContainer.start(); // you can provide ServletContext here
+ *         servletContainer.start();
  *     }
- *
+ * 
  *     {@literal @Test}
- *     public void shouldDoSomethingOnMyServlet() throws IOException {
+ *     public void shouldInvokeMyServlet() throws IOException, ServletException {
  *         // given
- *         MyServlet servlet = injector.getInstance(MyServlet.class);
- *
- *         ...
+ *         MockHttpServletRequest request = servletContainer.newRequest("GET", "/MyServlet");
+ *         MockHttpServletResponse response = new MockHttpServletResponse();
+ * 
+ *         // when
+ *         servletContainer.service(request, response);
+ * 
+ *         // then
+ *         // list of expectation ...
+ *         // e.g. assertThat(response.getContentAsString(), is("My response"));
  *     }
- *
+ * 
  *     {@literal @AfterClass}
  *     public static void stopServletContainer() {
  *         if (servletContainer != null) {
  *             servletContainer.stop();
  *         }
  *     }
- *
  * }
  * </pre>
  * Created on Jul 2, 2010
@@ -88,7 +103,12 @@ public class FakeServletContainer {
 
 	private final GuiceServletContextListener m_listener;
 
-	private ServletContext m_servletContext;
+	private final AtomicLong m_sessionIdProvider = new AtomicLong(0);
+
+	private ServletContext m_context;
+
+	private HttpSession m_session;
+
 
 	/**
 	 * Creates servlet container instance.
@@ -115,15 +135,16 @@ public class FakeServletContainer {
 	/**
 	 * Starts the container with using given {@code servletContext}.
 	 *
-	 * @param servletContext the servlet context.
+	 * @param context the servlet context.
 	 * @throws ServletException if {@link GuiceFilter} cannot be initialized.
 	 * @see #start()
 	 */
-	public void start(ServletContext servletContext) throws ServletException {
-		m_servletContext = servletContext;
-		MockFilterConfig config = new MockFilterConfig(m_servletContext);
+	public void start(ServletContext context) throws ServletException {
+		m_session = new MockHttpSession();
+		m_context = context;
+		MockFilterConfig config = new MockFilterConfig(m_context);
 		m_filter.init(config);
-		m_listener.contextInitialized(new ServletContextEvent(m_servletContext));
+		m_listener.contextInitialized(new ServletContextEvent(m_context));
 	}
 
 	/**
@@ -131,7 +152,15 @@ public class FakeServletContainer {
 	 */
 	public void stop() {
 		m_filter.destroy();
-		m_listener.contextDestroyed(new ServletContextEvent(m_servletContext));
+		m_listener.contextDestroyed(new ServletContextEvent(m_context));
+	}
+
+	public void service(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+	    if (request instanceof MockHttpServletRequest) {
+	        MockHttpServletRequest mockRequest = (MockHttpServletRequest) request;
+	        mockRequest.setServletPath(mockRequest.getRequestURI());
+	    }
+	    m_filter.doFilter(request, response, new MockFilterChain());
 	}
 
 	/**
@@ -139,8 +168,40 @@ public class FakeServletContainer {
 	 *
 	 * @return the servlet context
 	 */
-	public ServletContext getServletContext() {
-		return m_servletContext;
+	public ServletContext getContext() {
+		return m_context;
 	}
 
+	public MockHttpSession newSession() {
+	    MockHttpSession session = new MockHttpSession(m_context, String.valueOf(m_sessionIdProvider.getAndIncrement()));
+	    m_session = session;
+	    return session;
+	}
+
+    public MockHttpSession newSession(String sessionId) {
+        MockHttpSession session = new MockHttpSession(m_context, sessionId);
+        m_session = session;
+        return session;
+    }
+	
+	public void setSession(HttpSession session) {
+		m_session = session;
+	}
+
+	public HttpSession getSession() {
+		return m_session;
+	}
+
+	public MockHttpServletRequest newRequest() {
+	    MockHttpServletRequest request = new MockHttpServletRequest(m_context);
+        request.setSession(m_session);
+	    return request;
+	}
+
+    public MockHttpServletRequest newRequest(String method, String requestUri) {
+        MockHttpServletRequest request = new MockHttpServletRequest(m_context, method, requestUri);
+        request.setSession(m_session);
+        return request;
+    }
+	
 }

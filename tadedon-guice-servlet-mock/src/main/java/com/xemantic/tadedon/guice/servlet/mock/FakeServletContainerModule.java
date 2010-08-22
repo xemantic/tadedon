@@ -34,7 +34,7 @@ public class FakeServletContainerModule extends AbstractModule {
 	protected void configure() {
 		bind(GuiceFilter.class).in(Singleton.class);
 		bind(GuiceServletContextListener.class).to(InjectableGuiceServletContextListener.class);
-		requireBinding(FakeServletContainer.class);
+		bind(FakeServletContainer.class);
 	}
 
 }
