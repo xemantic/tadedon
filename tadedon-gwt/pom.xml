@@ -29,6 +29,10 @@
   <description>GWT utilities</description>
   <dependencies>
     <dependency>
+      <groupId>com.xemantic.tadedon</groupId>
+      <artifactId>tadedon-servlet</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
     </dependency>
@@ -41,6 +45,10 @@
       <artifactId>gin</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-servlet</artifactId>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
@@ -50,8 +58,8 @@
       <resource>
         <directory>src/main/java</directory>
         <includes>
-          <include>**/client/**.java</include>
-          <include>**/**.gwt.xml</include>
+          <include>**/client/**/*.java</include>
+          <include>**/*.gwt.xml</include>
         </includes>
       </resource>
     </resources>
@@ -59,38 +67,10 @@
       <testResource>
         <directory>src/test/java</directory>
         <includes>
-          <include>**/client/**.java</include>
-          <include>**/**.gwt.xml</include>
+          <include>**/client/**/*.java</include>
+          <include>**/*.gwt.xml</include>
         </includes>
       </testResource>    
     </testResources>
-    <plugins>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>**/itest/**</exclude>
-            <exclude>**/client/**</exclude>
-          </excludes>
-        </configuration>
-        <executions>
-          <execution>
-            <id>surefire-itest</id>
-            <phase>integration-test</phase>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <excludes>
-                <exclude>none</exclude>
-              </excludes>
-              <includes>
-                <include>**/itest/**</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
   </build>
 </project>
