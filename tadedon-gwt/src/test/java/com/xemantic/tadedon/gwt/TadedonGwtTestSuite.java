@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xemantic.tadedon.gwt.itest;
+package com.xemantic.tadedon.gwt;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -31,7 +31,7 @@ import com.xemantic.tadedon.gwt.event.client.EventBusGinModuleGwtTest;
 public class TadedonGwtTestSuite extends GWTTestSuite {
 
 	public static Test suite() {
-		TestSuite suite = new GWTTestSuite();
+		TestSuite suite = new GWTTestSuite(TadedonGwtTestSuite.class.getName());
 		suite.addTestSuite(EventBusGinModuleGwtTest.class);
 		return suite;
 	}
