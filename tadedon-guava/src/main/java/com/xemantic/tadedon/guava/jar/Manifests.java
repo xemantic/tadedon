@@ -60,7 +60,7 @@ public class Manifests {
 		Enumeration<URL> manifestUrls = getManifestResources(classLoader);
 		while (manifestUrls.hasMoreElements()) {
 			URL manifestUrl = (URL) manifestUrls.nextElement();
-			if (classUrl.getPath().startsWith(basePath)) {
+			if (manifestUrl.getPath().startsWith(basePath)) {
 				manifest = getManifest(manifestUrl);
 				break;
 
