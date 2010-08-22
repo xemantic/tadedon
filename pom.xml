@@ -55,19 +55,20 @@
     <spring.version>3.0.3.RELEASE</spring.version>
   </properties>
   <modules>
+    <module>tadedon-servlet</module>
     <module>tadedon-logging</module>
     <module>tadedon-guava</module>
     <module>tadedon-configuration</module>
-    <module>tadedon-servlet</module>
   	<module>tadedon-guice-utils</module>
     <module>tadedon-guice-servlet</module>
     <module>tadedon-guice-servlet-mock</module>
     <module>tadedon-guice-lifecycle</module>
   	<module>tadedon-guice-persistence</module>
-    <module>tadedon-guice-configuration</module>
     <module>tadedon-guice-logging</module>
+    <module>tadedon-guice-configuration</module>
     <module>tadedon-gwt</module>
     <module>tadedon-gwt-dev</module>
+    <module>tadedon-gwt-rpc-mock</module>
   </modules>
   <build>
     <plugins>
@@ -79,6 +80,32 @@
           <source>1.5</source>
           <target>1.5</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/itest/**</exclude>
+            <exclude>**/client/**</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>surefire-itest</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>none</exclude>
+              </excludes>
+              <includes>
+                <include>**/itest/**</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.riedelcastro</groupId>
@@ -137,6 +164,11 @@
       </dependency>
       <dependency>
         <groupId>com.xemantic.tadedon</groupId>
+        <artifactId>tadedon-servlet</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.xemantic.tadedon</groupId>
         <artifactId>tadedon-guava</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -153,6 +185,11 @@
       <dependency>
         <groupId>com.xemantic.tadedon</groupId>
         <artifactId>tadedon-guice-persistence-servlet</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.xemantic.tadedon</groupId>
+        <artifactId>tadedon-guice-servlet-mock</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -260,4 +297,14 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+  <repositories>
+    <repository>
+      <id>eclipselink</id>
+      <url>http://mirrors.ibiblio.org/pub/mirrors/eclipse/rt/eclipselink/maven.repo/</url>
+    </repository>
+    <repository> <!-- added here, because atlassian have guice sources which are not available in maven central -->
+        <id>atlassian-3rdparty</id>
+        <url>https://maven.atlassian.com/3rdparty/</url>        
+     </repository>
+  </repositories>
 </project>
