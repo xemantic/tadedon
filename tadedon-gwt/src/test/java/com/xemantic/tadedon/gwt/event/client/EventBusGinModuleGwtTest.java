@@ -15,6 +15,10 @@
  */
 package com.xemantic.tadedon.gwt.event.client;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 

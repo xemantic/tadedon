@@ -15,11 +15,9 @@
  */
 package com.xemantic.tadedon.gwt.event;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gwt.inject.rebind.adapter.GinModuleAdapter;
