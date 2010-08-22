@@ -23,7 +23,6 @@
     <artifactId>tadedon</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <groupId>com.xemantic.tadedon</groupId>
   <artifactId>tadedon-gwt</artifactId>
   <name>tadedon-gwt</name>
   <description>GWT utilities</description>
