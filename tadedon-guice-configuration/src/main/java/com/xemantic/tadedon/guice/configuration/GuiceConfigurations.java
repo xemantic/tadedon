@@ -21,13 +21,11 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;

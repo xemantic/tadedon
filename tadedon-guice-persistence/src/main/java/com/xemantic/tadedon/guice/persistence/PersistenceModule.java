@@ -27,8 +27,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.PrivateBinder;
-import com.google.inject.Provider;
-import com.google.inject.TypeLiteral;
 import com.google.inject.util.Types;
 
 /**

@@ -17,7 +17,6 @@ package com.xemantic.tadedon.guice.matcher;
 
 import static com.google.inject.internal.Preconditions.*;
 
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 
 import com.google.inject.matcher.AbstractMatcher;

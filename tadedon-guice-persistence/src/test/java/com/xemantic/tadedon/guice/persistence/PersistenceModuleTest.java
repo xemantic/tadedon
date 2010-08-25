@@ -288,7 +288,6 @@ public class PersistenceModuleTest {
 
 	/** Tests {@link TransactionalMethodInterceptor#get()}. */
 	@Test
-	@SuppressWarnings("null")
 	public void shouldThrowIllegalStateExceptionWhenUsingTransactionProviderOutsideTransaction() {
 		// given
 		Injector injector = newInjector(mock(EntityManager.class), mock(EntityTransaction.class));
@@ -309,7 +308,6 @@ public class PersistenceModuleTest {
 
 	/** Tests {@link EntityManagerProvider#get()}. */
 	@Test
-	@SuppressWarnings("null")
 	public void shouldThrowIllegalStateExceptionWhenUsingEntityManagerProviderOutsideTransaction() {
 		// given
 		Injector injector = newInjector(mock(EntityManager.class), mock(EntityTransaction.class));
@@ -330,7 +328,6 @@ public class PersistenceModuleTest {
 
 	/** Tests {@link TransactionalConnectionProvider#get()}. */
 	@Test
-	@SuppressWarnings("null")
 	public void shouldThrowIllegalStateExceptionWhenUsingConnectionProviderOutsideTransaction() {
 		// given
 		Injector injector = newInjector(mock(EntityManager.class), mock(EntityTransaction.class));
