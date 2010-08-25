@@ -41,6 +41,11 @@ public abstract class AbstractUiFieldAccessor<O> implements UiFieldAccessor<O> {
     /** {@inheritDoc} */
     @Override
     public Object getUiField(String fieldName) {
+        if (m_owner == null) {
+            throw new IllegalStateException(
+                    "Owner not initialized, call initializeAccess(owner)" +
+                    " before getting any field");
+        }
         Accessor accessor = getAccessorMap().get(fieldName);
         if (accessor == null) {
             return null;
