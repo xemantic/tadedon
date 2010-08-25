@@ -40,8 +40,8 @@ public final class ServletMatchers {
 	/**
 	 * Matcher for subclasses of {@link HttpServlet}.
 	 */
-	@SuppressWarnings("unchecked")
-	public static final Matcher<Class> CLASS = Matchers.subclassesOf(HttpServlet.class);
+	@SuppressWarnings("rawtypes")
+    public static final Matcher<Class> CLASS = Matchers.subclassesOf(HttpServlet.class);
 
 	/**
 	 * Matcher for <em>do</em> and {@code service} servlet methods.
@@ -76,8 +76,8 @@ public final class ServletMatchers {
 	 *
 	 * @return the servlet class matcher.
 	 */
-	@SuppressWarnings("unchecked")
-	public static Matcher<Class> servletClass() {
+	@SuppressWarnings("rawtypes")
+    public static Matcher<Class> servletClass() {
 		return CLASS;
 	}
 

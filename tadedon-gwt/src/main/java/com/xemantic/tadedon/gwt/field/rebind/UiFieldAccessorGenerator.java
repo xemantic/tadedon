@@ -16,7 +16,6 @@
 package com.xemantic.tadedon.gwt.field.rebind;
 
 import java.io.PrintWriter;
-import java.util.Set;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -25,9 +24,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.rebind.MortalLogger;
-import com.google.gwt.uibinder.rebind.model.OwnerClass;
 
 /**
  * 
