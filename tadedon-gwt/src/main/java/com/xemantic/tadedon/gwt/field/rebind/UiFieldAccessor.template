@@ -1,0 +1,47 @@
+/*
+ * Copyright $year$ Xemantic
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package $package$;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.xemantic.tadedon.gwt.field.client.Accessor;
+import com.xemantic.tadedon.gwt.field.client.AbstractUiFieldAccessor;
+
+
+/**
+ * UiField accessor for $ownerType$.
+ * <p>
+ * Created on $date$
+ *
+ * @author tadedon-generator
+ */
+public class $className$ extends AbstractUiFieldAccessor<$ownerType$> implements $interfaceType$ {
+
+    private $ownerType$ m_owner;
+
+    private final Map<String, Accessor> m_accessorMap = new HashMap<String, Accessor>();
+    {
+        $fields:{field|m_accessorMap.put("$field$", new Accessor() { public Object get() { return m_owner.$field$; } });}; separator="\n"$
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected Map<String, Accessor> getAccessorMap() {
+        return m_accessorMap;
+    }
+
+}

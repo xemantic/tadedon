@@ -20,9 +20,10 @@ import junit.framework.TestSuite;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 import com.xemantic.tadedon.gwt.event.client.EventBusGinModuleGwtTest;
+import com.xemantic.tadedon.gwt.field.client.UiFieldAccessorGeneratorTest;
 
 /**
- * 
+ * GWT Test suite for tadedon-gwt module.
  * <p>
  * Created on Aug 12, 2010
  *
@@ -33,6 +34,7 @@ public class TadedonGwtTestSuite extends GWTTestSuite {
 	public static Test suite() {
 		TestSuite suite = new GWTTestSuite(TadedonGwtTestSuite.class.getName());
 		suite.addTestSuite(EventBusGinModuleGwtTest.class);
+		suite.addTestSuite(UiFieldAccessorGeneratorTest.class);
 		return suite;
 	}
 
