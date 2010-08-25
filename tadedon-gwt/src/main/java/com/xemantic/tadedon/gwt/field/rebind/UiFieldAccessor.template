@@ -31,8 +31,6 @@ import com.xemantic.tadedon.gwt.field.client.AbstractUiFieldAccessor;
  */
 public class $className$ extends AbstractUiFieldAccessor<$ownerType$> implements $interfaceType$ {
 
-    private $ownerType$ m_owner;
-
     private final Map<String, Accessor> m_accessorMap = new HashMap<String, Accessor>();
     {
         $fields:{field|m_accessorMap.put("$field$", new Accessor() { public Object get() { return m_owner.$field$; } });}; separator="\n"$
