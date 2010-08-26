@@ -281,6 +281,11 @@
         <artifactId>commons-configuration</artifactId>
         <version>1.6</version>
       </dependency>
+      <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>stringtemplate</artifactId>
+        <version>3.2.1</version>
+      </dependency>
 
       <!-- dependencies with scope test -->
 
