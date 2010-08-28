@@ -303,6 +303,18 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+  <distributionManagement>
+    <repository>
+      <id>xemantic-builds</id>
+      <name>xemantic-builds</name>
+      <url>dav:https://xemantic-builds.googlecode.com/svn/maven/</url>
+    </repository>
+    <snapshotRepository>
+      <id>xemantic-builds-snapshots</id>
+      <name>xemantic-builds-snapshots</name>
+      <url>dav:https://xemantic-builds.googlecode.com/svn/maven-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
   <repositories>
     <repository>
       <id>eclipselink</id>
