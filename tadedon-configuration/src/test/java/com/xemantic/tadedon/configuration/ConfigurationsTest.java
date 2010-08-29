@@ -46,7 +46,7 @@ public class ConfigurationsTest {
     @Before
     public void createTestConfDir() throws IOException {
         testConfDir = new File("target/test-conf-dir");
-        System.out.println(testConfDir.getAbsolutePath());
+        System.out.println("Creating dir: " + testConfDir.getAbsolutePath() + " : " + testConfDir.getCanonicalPath());
         if (!testConfDir.mkdir()) {
             throw new IOException("Cannot create directory: " + testConfDir);
         }
@@ -162,6 +162,7 @@ public class ConfigurationsTest {
 
     @After
     public void deleteTestConfDir() throws IOException {
+        System.out.println("Deleting dir: " + testConfDir.getAbsolutePath() + " : " + testConfDir.getCanonicalPath());
         Files.deleteRecursively(testConfDir);
     }
 
