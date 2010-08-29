@@ -41,12 +41,11 @@ import com.google.common.io.Files;
  */
 public class ConfigurationsTest {
 
-    private File testConfDir;
+    private File testConfDir = new File("target/test-conf-dir");
+
 
     @Before
-    public void createTestConfDir() throws IOException {
-        testConfDir = new File("target/test-conf-dir");
-        System.out.println("Creating dir: " + testConfDir.getAbsolutePath() + " : " + testConfDir.getCanonicalPath());
+    public void createTestConfDir() throws IOException { 
         if (!testConfDir.mkdir()) {
             throw new IOException("Cannot create directory: " + testConfDir);
         }
@@ -162,8 +161,7 @@ public class ConfigurationsTest {
 
     @After
     public void deleteTestConfDir() throws IOException {
-        System.out.println("Deleting dir: " + testConfDir.getAbsolutePath() + " : " + testConfDir.getCanonicalPath());
-        Files.deleteRecursively(testConfDir);
+        ConfigurationTests.deleteRecursively(testConfDir);
     }
 
 }
