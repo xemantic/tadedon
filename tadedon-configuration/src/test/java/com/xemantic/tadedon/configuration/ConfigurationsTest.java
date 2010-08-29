@@ -41,10 +41,12 @@ import com.google.common.io.Files;
  */
 public class ConfigurationsTest {
 
-    private File testConfDir = new File("target/test-conf-dir");
+    private File testConfDir;
 
     @Before
     public void createTestConfDir() throws IOException {
+        testConfDir = new File("target/test-conf-dir");
+        System.out.println(testConfDir.getAbsolutePath());
         if (!testConfDir.mkdir()) {
             throw new IOException("Cannot create directory: " + testConfDir);
         }
