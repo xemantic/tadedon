@@ -15,7 +15,10 @@
  */
 package com.xemantic.tadedon.configuration;
 
+import static com.google.common.base.Preconditions.*;
+
 import java.io.File;
+import java.io.IOException;
 
 /**
  * 
@@ -31,6 +34,23 @@ public final class ConfigurationTests {
 
     public static File getDefaultConfFile(String confName) {
         return new File("src/test/resources/" + Configurations.DEFAULT_CONFIGURATION_PATH, confName);
+    }
+
+    public static void deleteDirectoryContents(File directory) throws IOException {
+        checkArgument(directory.isDirectory(), "Not a directory: %s", directory);
+        File[] files = directory.listFiles();
+        for (File file : files) {
+            deleteRecursively(file);
+        }
+    }
+
+    public static void deleteRecursively(File file) throws IOException {
+        if (file.isDirectory()) {
+            deleteDirectoryContents(file);
+        }
+        if (!file.delete()) {
+            throw new IOException("Failed to delete " + file);
+        }
     }
 
 }
