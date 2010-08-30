@@ -18,6 +18,7 @@ package com.xemantic.tadedon.guice.servlet.mock;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.servlet.FilterChain;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
@@ -25,16 +26,19 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletContext;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.SessionScoped;
 
 /**
  * Servlet container representation which does not
@@ -99,6 +103,8 @@ import com.google.inject.servlet.GuiceServletContextListener;
 @Singleton
 public class FakeServletContainer {
 
+    private final Injector m_injector;
+
 	private final GuiceFilter m_filter;
 
 	private final GuiceServletContextListener m_listener;
@@ -117,8 +123,13 @@ public class FakeServletContainer {
 	 * @param listener the listener instance.
 	 */
 	@Inject
-	public FakeServletContainer(GuiceFilter filter, GuiceServletContextListener listener) {
-		m_filter = filter;
+	public FakeServletContainer(
+	        Injector injector,
+	        GuiceFilter filter,
+	        GuiceServletContextListener listener) {
+
+		m_injector = injector;
+        m_filter = filter;
 		m_listener = listener;
 	}
 
@@ -160,8 +171,48 @@ public class FakeServletContainer {
 	        MockHttpServletRequest mockRequest = (MockHttpServletRequest) request;
 	        mockRequest.setServletPath(mockRequest.getRequestURI());
 	    }
-	    m_filter.doFilter(request, response, new MockFilterChain());
+	    m_filter.doFilter(request, response, new org.springframework.mock.web.MockFilterChain());
 	}
+
+	/**
+	 * Returns instance provided by call to {@link Injector#getInstance(Class)}, but
+	 * if it where returned to the servlet handling the request. Useful for initializing
+	 * {@link SessionScoped} components. 
+	 *
+	 * @throws ServletException 
+	 * @throws IOException 
+	 */
+	@SuppressWarnings("unchecked")
+    public <T> T getInstance(final Class<T> type) throws IOException, ServletException {
+	    MockFilterChain chain = new MockFilterChain() {
+            @Override
+            protected Object invoke() throws Throwable {
+                return m_injector.getInstance(type);
+            }
+        };
+	    m_filter.doFilter(newRequest(), new MockHttpServletResponse(), chain);
+	    return (T) chain.getResult();
+	}
+
+	/**
+     * Returns instance provided by call to {@link Injector#getInstance(Class)}, but
+     * if it where returned to the servlet handling the request. Useful for initializing
+     * {@link SessionScoped} components. 
+     *
+     * @throws ServletException 
+     * @throws IOException 
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getInstance(final Key<T> key) throws IOException, ServletException {
+        MockFilterChain chain = new MockFilterChain() {
+            @Override
+            protected Object invoke() throws Throwable {
+                return m_injector.getInstance(key);
+            }
+        };
+        m_filter.doFilter(newRequest(), new MockHttpServletResponse(), chain);
+        return (T) chain.getResult();
+    }
 
 	/**
 	 * Returns container's servlet context.
