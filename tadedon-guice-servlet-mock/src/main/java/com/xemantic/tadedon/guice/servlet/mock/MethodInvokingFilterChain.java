@@ -31,14 +31,9 @@ import org.aopalliance.intercept.MethodInvocation;
  *
  * @author hshsce
  */
-public class MethodInvokingFilterChain implements FilterChain {
+public class MethodInvokingFilterChain extends MockFilterChain {
 
 	private final MethodInvocation m_invocation;
-
-	private Throwable m_throwable;
-
-	private Object m_result;
-
 
 	/**
 	 * Creates filter chain instance.
@@ -51,32 +46,8 @@ public class MethodInvokingFilterChain implements FilterChain {
 
 	/** {@inheritDoc} */
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response) {
-		try {
-			m_result = m_invocation.proceed();
-		} catch (Throwable t) {
-			m_throwable = t;
-		}
-	}
-
-	/**
-	 * Returns throwable thrown during execution of
-	 * {@link #doFilter(ServletRequest, ServletResponse)}
-	 * or {@code null} if no throwable occurred.
-	 *
-	 * @return the throwable or {@code null} if nothing was thrown.
-	 */
-	public Throwable getThrowable() {
-		return m_throwable;
-	}
-
-	/**
-	 * Returns invocation result.
-	 *
-	 * @return the result.
-	 */
-	public Object getResult() {
-		return m_result;
+	protected Object invoke() throws Throwable {
+	    return m_invocation.proceed();
 	}
 
 }
