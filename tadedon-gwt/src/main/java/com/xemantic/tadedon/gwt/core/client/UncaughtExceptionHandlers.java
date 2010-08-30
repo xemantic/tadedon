@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xemantic.tadedon.gwt.event.client;
+package com.xemantic.tadedon.gwt.core.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
@@ -29,6 +29,7 @@ import com.google.gwt.user.client.Window;
 public final class UncaughtExceptionHandlers {
 
     private UncaughtExceptionHandlers() { /* util class, non-instantiable */ }
+
 
     public static void installHandler() {
         final UncaughtExceptionHandler uncaughtExceptionHandler = GWT.getUncaughtExceptionHandler();
