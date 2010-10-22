@@ -48,7 +48,7 @@
   </developers>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gwt.version>2.1.0.M2</gwt.version>
+    <gwt.version>2.1-SNAPSHOT</gwt.version>
     <guice.version>2.0</guice.version>
     <logback.version>0.9.24</logback.version>
     <slf4j.version>1.6.1</slf4j.version>
@@ -82,6 +82,7 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <excludes>
@@ -102,7 +103,7 @@
                 <exclude>none</exclude>
               </excludes>
               <includes>
-                <include>**/itest/**</include>
+                <include>**/itest/**/*Test.java</include>
               </includes>
             </configuration>
           </execution>
@@ -324,10 +325,10 @@
       </snapshots>
     </repository>
     <repository> <!-- remove when there is stable GWT version -->
-      <id>gwt-dev-release</id>
-      <url>http://google-web-toolkit.googlecode.com/svn/2.1.0.M2/gwt/maven/</url>
+      <id>google-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/google-snapshots/</url>
       <snapshots>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
       </snapshots>
     </repository>
     <repository> <!-- added here, because atlassian have guice sources which are not available in maven central -->
@@ -341,7 +342,7 @@
   <pluginRepositories>
     <pluginRepository> <!-- remove when there is stable GWT version -->
       <id>gwt-dev-release</id>
-      <url>http://google-web-toolkit.googlecode.com/svn/2.1.0.M2/gwt/maven/</url>
+      <url>http://google-web-toolkit.googlecode.com/svn/2.1.0.RC1/gwt/maven/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
