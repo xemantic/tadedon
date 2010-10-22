@@ -25,6 +25,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.uibinder.rebind.MortalLogger;
+import com.google.gwt.uibinder.rebind.UiBinderContext;
 
 /**
  * 
@@ -35,6 +36,8 @@ import com.google.gwt.uibinder.rebind.MortalLogger;
  *
  */
 public class UiFieldAccessorGenerator extends Generator {
+
+    private final UiBinderContext m_uiBinderCtx = new UiBinderContext();
 
     /** {@inheritDoc} */
     @Override
@@ -52,7 +55,7 @@ public class UiFieldAccessorGenerator extends Generator {
 
         PrintWriter out = context.tryCreate(logger, packageName, implName);
         if (out != null) {
-            UiFieldAccessorGenerators.write(new MortalLogger(logger), context, packageName, implName, interfaceType, out);
+            UiFieldAccessorGenerators.write(new MortalLogger(logger), context, packageName, implName, interfaceType, out, m_uiBinderCtx);
         }
         context.commit(logger, out);
         return packageName + "." + implName;

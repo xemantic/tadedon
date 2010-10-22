@@ -33,6 +33,7 @@ import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.uibinder.rebind.MortalLogger;
+import com.google.gwt.uibinder.rebind.UiBinderContext;
 import com.google.gwt.uibinder.rebind.model.OwnerClass;
 import com.google.gwt.uibinder.rebind.model.OwnerField;
 import com.xemantic.tadedon.gwt.field.client.UiFieldAccessor;
@@ -53,7 +54,8 @@ public class UiFieldAccessorGenerators {
             String packageName,
             String implName,
             JClassType interfaceType,
-            PrintWriter out) throws UnableToCompleteException {
+            PrintWriter out,
+            UiBinderContext uiBinderCtx) throws UnableToCompleteException {
 
         // Check for possible misuse 'GWT.create(UiFielcAccessor.class)'
         JClassType accessorItself = context.getTypeOracle().findType(UiFieldAccessor.class.getCanonicalName());
@@ -77,7 +79,7 @@ public class UiFieldAccessorGenerators {
 
         JClassType ownerType = typeArgs[0];
 
-        OwnerClass ownerClass = new OwnerClass(ownerType, logger);
+        OwnerClass ownerClass = new OwnerClass(ownerType, logger, uiBinderCtx);
         Set<String> fields = UiFieldAccessorGenerators.getFieldNames(ownerClass);
         UiFieldAccessorGenerators.write(packageName, implName, ownerType.getName(), interfaceType.getName(), fields, out);
     }
