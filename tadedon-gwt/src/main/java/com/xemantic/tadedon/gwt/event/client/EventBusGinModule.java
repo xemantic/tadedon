@@ -15,12 +15,11 @@
  */
 package com.xemantic.tadedon.gwt.event.client;
 
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.inject.name.Names;
 
 /**
- * 
+ * Module which binds singleton {@link EventBus}.
  * <p>
  * Created on Mar 24, 2010
  *
@@ -31,7 +30,7 @@ public class EventBusGinModule extends AbstractGinModule {
 	/** {@inheritDoc} */
 	@Override
 	protected void configure() {
-		bind(HandlerManager.class).annotatedWith(Names.named("eventBus")).toProvider(EventBusProvider.class);
+		bind(EventBus.class).toProvider(EventBusProvider.class);
 	}
 
 }

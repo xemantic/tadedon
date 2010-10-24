@@ -15,25 +15,26 @@
  */
 package com.xemantic.tadedon.gwt.event.client;
 
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
- * 
+ * Provider of singleton {@link EventBus} instance.
  * <p>
  * Created on Mar 24, 2010
  *
  * @author hshsce
  */
 @Singleton
-public class EventBusProvider implements Provider<HandlerManager> {
+public class EventBusProvider implements Provider<EventBus> {
 
-	private final HandlerManager m_eventBus = new HandlerManager(null);
+	private final EventBus m_eventBus = new SimpleEventBus();
 
 	/** {@inheritDoc} */
 	@Override
-	public HandlerManager get() {
+	public EventBus get() {
 		return m_eventBus;
 	}
 
