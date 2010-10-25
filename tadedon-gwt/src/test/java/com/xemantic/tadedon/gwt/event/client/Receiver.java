@@ -15,6 +15,7 @@
  */
 package com.xemantic.tadedon.gwt.event.client;
 
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,12 +32,12 @@ import com.google.inject.name.Named;
 @Singleton
 public class Receiver {
 
-	private final HandlerManager m_eventBus;
+	private final EventBus m_eventBus;
 
 	private String m_receivedMessage;
 
 	@Inject
-	public Receiver(@Named("eventBus") HandlerManager eventBus) {
+	public Receiver(EventBus eventBus) {
 		m_eventBus = eventBus;
 		m_eventBus.addHandler(MessageEvent.TYPE, new MessageEventHandler() {
 			@Override

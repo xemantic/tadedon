@@ -15,6 +15,7 @@
  */
 package com.xemantic.tadedon.gwt.event.client;
 
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,11 +32,11 @@ import com.google.inject.name.Named;
 @Singleton
 public class Publisher {
 
-	private final HandlerManager m_eventBus;
+	private final EventBus m_eventBus;
 
 
 	@Inject
-	public Publisher(@Named("eventBus") HandlerManager eventBus) {
+	public Publisher(EventBus eventBus) {
 		m_eventBus = eventBus;
 	}
 
