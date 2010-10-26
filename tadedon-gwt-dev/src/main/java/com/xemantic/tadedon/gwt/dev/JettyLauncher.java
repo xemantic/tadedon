@@ -17,9 +17,18 @@ package com.xemantic.tadedon.gwt.dev;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import org.apache.commons.io.IOUtils;
 import org.mortbay.jetty.webapp.WebAppClassLoader;
 import org.mortbay.jetty.webapp.WebAppContext;
 
@@ -49,33 +58,48 @@ public class JettyLauncher extends com.google.gwt.dev.shell.jetty.JettyLauncher 
 
         private class LauncherWebAppClassLoader extends WebAppClassLoader {
 
-            private static final String META_INF_SERVICES = "META-INF/services/";
+            private final Set<String> gwtDevMetaInfServices = new HashSet<String>();
+
+            private final Set<String> systemClasses = new HashSet<String>();
+
 
             public LauncherWebAppClassLoader() throws IOException {
                 super(bootStrapOnlyClassLoader, LauncherWebAppContext.this);
-
                 URL[] urls = ((URLClassLoader) systemClassLoader).getURLs();
                 for (URL url : urls) { // add all the classpath entries except gwt-dev
-                    URL resource = (new URLClassLoader(new URL[] { url }, null))
-                        .getResource("com/google/gwt/dev/About.properties");
-                    if (resource == null) {
-                        addClassPath(url.getFile());
+                    URLClassLoader loader = new URLClassLoader(new URL[] { url }, null);
+                    if (loader.getResource("com/google/gwt/dev/About.properties") != null) { // it is gwt-dev
+                    	File file;
+                    	try {
+                            file = new File(url.toURI());
+                    	} catch(URISyntaxException e) {
+                            file = new File(url.getPath());
+                    	}
+                    	ZipFile zipFile = new JarFile(file);
+                    	Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                    	while (entries.hasMoreElements()) {
+                    		ZipEntry entry = entries.nextElement();
+                    		String name = entry.getName();
+                    		if (name.matches("^META-INF/services/.+$")) {
+                    			gwtDevMetaInfServices.add(name);
+                    			InputStream in = zipFile.getInputStream(entry);
+                    			String serviceClass = IOUtils.toString(in).split(" ")[0].trim();
+                    			systemClasses.add(serviceClass);
+                    		}
+                    	}
+                    	continue;
                     }
+                	if (!url.getPath().endsWith("/target/test-classes/")) { // exclude unit test from classpath
+                		addClassPath(url.toString());
+                	}
                 }
             }
 
             @Override
             public URL findResource(String name) {
-                // Specifically for
-                // META-INF/services/javax.xml.parsers.SAXParserFactory
-                String checkName = name;
-                if (checkName.startsWith(META_INF_SERVICES)) {
-                    checkName = checkName.substring(META_INF_SERVICES.length());
-                }
-
                 // For a system path, load from the outside world.
                 URL found;
-                if (isSystemPath(checkName)) {
+                if (isSystemPath(name)) {
                     found = systemClassLoader.getResource(name);
                     if (found != null) {
                         return found;
@@ -88,12 +112,6 @@ public class JettyLauncher extends com.google.gwt.dev.shell.jetty.JettyLauncher 
                     return found;
                 }
 
-                // See if the outside world has it.
-                found = systemClassLoader.getResource(name);
-                if (found == null) {
-                    return null;
-                }
-
                 return super.findResource(name);
             }
 
@@ -104,10 +122,16 @@ public class JettyLauncher extends com.google.gwt.dev.shell.jetty.JettyLauncher 
              */
             @Override
             public boolean isSystemPath(String name) {
+            	if (name.startsWith("META-INF")) {
+            		return gwtDevMetaInfServices.contains(name);
+            	}
                 name = name.replace('/', '.');
-                return super.isSystemPath(name)
-                    || name.startsWith("org.apache.jasper.")
-                    || name.startsWith("org.apache.xerces.");
+                return
+                    name.startsWith("org.mortbay.") ||
+                	name.startsWith("javax.servlet.") ||
+                	name.startsWith("org.apache.xalan.") ||
+                	name.startsWith("org.apache.jasper.") ||
+                	systemClasses.contains(name);
             }
 
             @Override
@@ -116,8 +140,7 @@ public class JettyLauncher extends com.google.gwt.dev.shell.jetty.JettyLauncher 
                 if (isSystemPath(name)) {
                     try {
                         return systemClassLoader.loadClass(name);
-                    } catch (ClassNotFoundException e) {
-                    }
+                    } catch (ClassNotFoundException e) { } // just proceed
                 }
 
                 try {
@@ -129,16 +152,9 @@ public class JettyLauncher extends com.google.gwt.dev.shell.jetty.JettyLauncher 
                     }
                 }
 
-                // See if the outside world has a URL for it.
-                String resourceName = name.replace('.', '/') + ".class";
-                URL found = systemClassLoader.getResource(resourceName);
-                if (found == null) {
-                    return null;
-                }
-
                 return super.findClass(name);
             }
- 
+
         }
 
         /**
