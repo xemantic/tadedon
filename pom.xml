@@ -48,11 +48,11 @@
   </developers>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gwt.version>2.1-SNAPSHOT</gwt.version>
+    <gwt.version>2.1.0</gwt.version>
     <guice.version>2.0</guice.version>
-    <logback.version>0.9.24</logback.version>
+    <logback.version>0.9.26</logback.version>
     <slf4j.version>1.6.1</slf4j.version>
-    <spring.version>3.0.3.RELEASE</spring.version>
+    <spring.version>3.0.4.RELEASE</spring.version>
   </properties>
   <modules>
     <module>tadedon-servlet</module>
@@ -270,7 +270,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>r05</version>
+        <version>r07</version>
       </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
@@ -324,25 +324,11 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <repository> <!-- remove when there is stable GWT version -->
-      <id>google-snapshots</id>
-      <url>https://oss.sonatype.org/content/repositories/google-snapshots/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository> <!-- added here, because atlassian have guice sources which are not available in maven central -->
-      <id>atlassian-3rdparty</id>
-      <url>https://maven.atlassian.com/3rdparty/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
   </repositories>
   <pluginRepositories>
     <pluginRepository> <!-- remove when there is stable GWT version -->
       <id>gwt-dev-release</id>
-      <url>http://google-web-toolkit.googlecode.com/svn/2.1.0.RC1/gwt/maven/</url>
+      <url>http://google-web-toolkit.googlecode.com/svn/2.1.0/gwt/maven/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
