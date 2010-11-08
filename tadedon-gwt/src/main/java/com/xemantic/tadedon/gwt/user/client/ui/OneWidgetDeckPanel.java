@@ -15,13 +15,13 @@
  */
 package com.xemantic.tadedon.gwt.user.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.HasAnimation;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -36,9 +36,26 @@ public class OneWidgetDeckPanel extends Composite
 
 	private DeckPanel m_panel = new DeckPanel();
 
+	private Widget m_widget = null;
+
+	private interface Style {
+		String WIDGET_ID = "tadedon-OneWidgetDeckPanel";
+		String NULL_WIDGET = "nullWidget";
+	}
+
 	public OneWidgetDeckPanel() {
-		m_panel.add(new Widget() {{ setElement(Document.get().createDivElement()); }}); // empty widget
+		/* 
+		 * Widget which is shown until no other widget is set with setWidget method
+		 * or shown when null is passed to setWidget method.
+		 */
+		m_panel.add(new Widget() {
+				{
+					setElement(Document.get().createDivElement());
+					setStyleName(Style.NULL_WIDGET);
+				}
+			});
 		initWidget(m_panel);
+		setStyleName(Style.WIDGET_ID);
 		m_panel.showWidget(0);
 	}
 
@@ -50,10 +67,28 @@ public class OneWidgetDeckPanel extends Composite
 
 	/** {@inheritDoc} */
 	@Override
-	public void setWidget(final Widget widget) {
-		m_panel.add(new SimplePanel() {
+	public void setWidget(Widget widget) {
+		m_widget = widget;
+		if (widget != null) {
+			addWidget(widget);
+			m_panel.showWidget(m_panel.getWidgetCount() - 1);
+		} else {
+			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+				@Override
+				public void execute() {
+					if (m_widget == null) {
+						m_panel.showWidget(0);
+					}
+				}
+			});
+		}
+	}
+
+	private void addWidget(final Widget widget) {
+		// wrap widget in composite with lifecycle controlled by setVisible method
+		m_panel.add(new Composite() { 
 			{
-				setWidget(widget);
+				initWidget(widget);
 			}
 			@Override
 			public void setVisible(boolean visible) {
@@ -61,20 +96,23 @@ public class OneWidgetDeckPanel extends Composite
 					if (!added) { // first invocation, see DeckPanel#finishWidgetInitialization()
 						added = true;
 					} else { // last invocation
-						m_panel.remove(this);						
+						m_panel.remove(this);
 					}
 				}
 				super.setVisible(visible);
 			}
 			boolean added = false;
-		});
-		m_panel.showWidget(m_panel.getWidgetCount() - 1);
+		});		
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Widget getWidget() {
-		return m_panel.getWidget(m_panel.getVisibleWidget());
+		int index = m_panel.getVisibleWidget();
+		if (m_panel.getVisibleWidget() == 0) {
+			return null;
+		}
+		return m_panel.getWidget(index);
 	}
 
 	/** {@inheritDoc} */
