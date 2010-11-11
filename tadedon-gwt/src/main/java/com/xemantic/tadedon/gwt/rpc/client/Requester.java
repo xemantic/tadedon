@@ -24,22 +24,25 @@ package com.xemantic.tadedon.gwt.rpc.client;
  */
 public class Requester {
 
-    private final Object m_mutext = new Object();
+    private final Object m_mutex = new Object();
 
     private CancelableAsyncCallback<?> m_callback;
 
 
-    public void register(CancelableAsyncCallback<?> callback) {
-        synchronized (m_mutext) {
+    @SuppressWarnings("unchecked")
+	public <T> CancelableAsyncCallback<T> register(CancelableAsyncCallback<T> callback) {
+        synchronized (m_mutex) {
             if (m_callback != null) {
                 m_callback.cancel();                
             }
             m_callback = callback;
         }
+        
+        return (CancelableAsyncCallback<T>) m_callback;
     }
 
     public void cancel() {
-        synchronized (m_mutext) {
+        synchronized (m_mutex) {
             if (m_callback != null) {
                 m_callback.cancel();
                 m_callback = null;                
