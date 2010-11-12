@@ -131,7 +131,7 @@ public class JettyLauncher extends com.google.gwt.dev.shell.jetty.JettyLauncher 
                 	name.startsWith("javax.servlet.") ||
                 	name.startsWith("org.apache.xalan.") ||
                 	name.startsWith("org.apache.jasper.") ||
-                	name.startsWith("com.google.gwt.") ||
+                	name.startsWith("com.google.gwt.dev") ||
                 	systemClasses.contains(name);
             }
 
