@@ -45,10 +45,11 @@ public class Manifests {
 	 * @param stringClass
 	 * @return
 	 */
-	public static Manifest getManifest(Class<?> classOfManifestJar) {
-		ClassLoader classLoader = classOfManifestJar.getClassLoader();
-		checkArgument(classLoader != null, "klass seems to be loaded by bootstrap classloader: " + classOfManifestJar.getName());
-		String classResource = classOfManifestJar.getName().replace(".", "/") + ".class";
+	public static Manifest getManifest(Class<?> classFromJarWithManifest) {
+		checkArgument(classFromJarWithManifest != null, "classFromJarWithManifest cannot be null");
+		ClassLoader classLoader = classFromJarWithManifest.getClassLoader();
+		checkArgument(classLoader != null, "klass seems to be loaded by bootstrap classloader: " + classFromJarWithManifest.getName());
+		String classResource = classFromJarWithManifest.getName().replace(".", "/") + ".class";
 		URL classUrl = classLoader.getResource(classResource);
 		if (classUrl == null) {
 			throw new AssertionError("null resource for given class");
@@ -79,11 +80,11 @@ public class Manifests {
 
 	public static Manifest getManifest(URL url) {
 		try {
-			Manifest manifest;
+			Manifest manifest = new Manifest();
 			boolean threw = true;
 			InputStream in = url.openStream();
 			try {
-				manifest = new Manifest(in);
+				manifest.read(in);
 				threw = false;
 			} finally {
 				Closeables.close(in, threw);
@@ -94,33 +95,34 @@ public class Manifests {
 		}
 	}
 
-	public String getVersion(Class<?> classOfManifestJar) {
-		return getVersion(classOfManifestJar);
+	public static String getVersion(Class<?> classFromJarWithManifest) {
+		return getVersion(classFromJarWithManifest);
 	}
 
-	public String getVersion(Manifest manifest) {
+	public static String getVersion(Manifest manifest) {
 		return manifest.getMainAttributes().getValue(IMPLEMENTATION_VERSION_PROPERTY);
 	}
 
-	public String getBuildNumber(Class<?> classOfManifestJar) {
-		return getBuildNumber(getManifest(classOfManifestJar));
+	public static String getBuildNumber(Class<?> classFromJarWithManifest) {
+		return getBuildNumber(getManifest(classFromJarWithManifest));
 	}
 
-	public String getBuildNumber(Manifest manifest) {
+	public static String getBuildNumber(Manifest manifest) {
 		return manifest.getMainAttributes().getValue(BUILD_NUMBER_PROPERTY);
 	}
 
-	public String getFullVersion(Class<?> classOfManifestJar) {
-		return getFullVersion(getManifest(classOfManifestJar));
+	public static String getFullVersion(Class<?> classFromJarWithManifest) {
+		return getFullVersion(getManifest(classFromJarWithManifest));
 	}
 
-	public String getFullVersion(Manifest manifest) {
+	public static String getFullVersion(Manifest manifest) {
 		String version = getVersion(manifest);
 		String buildNumber = getBuildNumber(manifest);
 		if (version == null) {
 			return null;
 		}
 		if (buildNumber != null) {
+			version += "-";
 			version += buildNumber;
 		}
 		return version;
