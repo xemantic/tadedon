@@ -48,7 +48,7 @@
   </developers>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gwt.version>2.1.0</gwt.version>
+    <gwt.version>2.1.1</gwt.version>
     <guice.version>2.0</guice.version>
     <logback.version>0.9.26</logback.version>
     <slf4j.version>1.6.1</slf4j.version>
@@ -341,13 +341,4 @@
       </snapshots>
     </repository>
   </repositories>
-  <pluginRepositories>
-    <pluginRepository> <!-- remove when there is stable GWT version -->
-      <id>gwt-dev-release</id>
-      <url>http://google-web-toolkit.googlecode.com/svn/2.1.0/gwt/maven/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 </project>
