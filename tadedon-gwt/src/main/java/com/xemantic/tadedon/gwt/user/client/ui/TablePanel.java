@@ -15,6 +15,7 @@
  */
 package com.xemantic.tadedon.gwt.user.client.ui;
 
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
@@ -36,12 +37,18 @@ public class TablePanel extends HTMLPanel {
 
 	public void addRow(IsWidget rowWidget) {
 		if (!(rowWidget.asWidget().getElement().cast() instanceof TableRowElement)) {
-			throw new IllegalArgumentException("Cannot add widget which root element is not TableRowElement");
+			throw new IllegalArgumentException(
+			    "rowWidget's root element must be instance of TableRowElement");
 		}
 
 		TableElement table = getElement().cast();
-		TableSectionElement tbody = table.getTBodies().getItem(0);
-		add(rowWidget.asWidget(), tbody);
+		NodeList<TableSectionElement> tBodies = table.getTBodies();
+		if ((tBodies != null) && (tBodies.getLength() > 0)) {
+			TableSectionElement tbody = tBodies.getItem(0);
+			add(rowWidget.asWidget(), tbody);
+		} else {
+			add(rowWidget.asWidget(), getElement());
+		} 
 	}
 
 }
