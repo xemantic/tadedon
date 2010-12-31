@@ -3,18 +3,18 @@
   <parent>
     <artifactId>tadedon</artifactId>
     <groupId>com.xemantic.tadedon</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
   </parent>
   <groupId>com.xemantic.tadedon</groupId>
   <artifactId>tadedon-guice-configuration</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>tadedon-guice-configuration</name>
   <description>Guice support for tadedon-configuration</description>
   <dependencies>
     <dependency>
       <groupId>com.xemantic.tadedon</groupId>
       <artifactId>tadedon-configuration</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
