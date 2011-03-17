@@ -47,7 +47,7 @@ public final class ServletMatchers {
 	 * Matcher for <em>do</em> and {@code service} servlet methods.
 	 */
 	public static final Matcher<Method> METHOD = new AbstractMatcher<Method>() {
-		@Override
+
 		public boolean matches(Method method) {
 			return METHODS.contains(method.getName());
 		}
