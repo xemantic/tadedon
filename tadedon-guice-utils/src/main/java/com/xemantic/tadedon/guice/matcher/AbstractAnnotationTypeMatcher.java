@@ -15,7 +15,7 @@
  */
 package com.xemantic.tadedon.guice.matcher;
 
-import static com.google.inject.internal.Preconditions.*;
+import static com.google.common.base.Preconditions.*;
 
 import java.lang.annotation.Annotation;
 
