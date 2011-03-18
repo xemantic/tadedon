@@ -15,7 +15,7 @@
  */
 package com.xemantic.tadedon.guice.persistence;
 
-import static com.google.inject.internal.Preconditions.*;
+import static com.google.common.base.Preconditions.*;
 
 import java.lang.reflect.Method;
 
