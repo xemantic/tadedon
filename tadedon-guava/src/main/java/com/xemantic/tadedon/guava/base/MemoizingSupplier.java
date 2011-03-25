@@ -28,23 +28,21 @@ import com.google.common.base.Suppliers;
 
 /**
  * Fast memoizing supplier.
- * Note: Will work for JVM 1.5 and above (use of volatile field) (we use generics here anyway which put
- * minimum 1.5 requirement).
  * <p>
  * Created on Jun 24, 2010
  *
- * @author hshsce
+ * @author morisil
  * @param <T> type instance returned by supplier.
  * @see Suppliers#memoize(Supplier)
  */
 public class MemoizingSupplier<T> implements Supplier<T> {
 
-	private final Lock m_lock = new ReentrantLock();
+	private final Lock lock = new ReentrantLock();
 
-	private final Supplier<T> m_deletage;
+	private final Supplier<T> deletage;
 
-	@GuardedBy("m_lock")
-	private final AtomicReference<T> m_reference = new AtomicReference<T>();
+	@GuardedBy("lock")
+	private final AtomicReference<T> reference = new AtomicReference<T>();
 
 
 	/**
@@ -57,26 +55,35 @@ public class MemoizingSupplier<T> implements Supplier<T> {
 	 */
 	public MemoizingSupplier(Supplier<T> deletage) {
 		checkArgument(deletage != null, "delegate cannot be null");
-		m_deletage = deletage;
+		this.deletage = deletage;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public T get() {
-		T instance = m_reference.get();
+		T instance = reference.get();
 		if (instance == null) {
-			m_lock.lock();
+			lock.lock();
 			try {
-				instance = m_reference.get();
+				instance = reference.get();
 				if (instance == null) { // instance could be already provided by other thread
-					instance = m_deletage.get();
-					m_reference.set(instance);
+					instance = deletage.get();
+					reference.set(instance);
 				}
 			} finally {
-				m_lock.unlock();
+				lock.unlock();
 			}
 		}
 		return instance;
+	}
+
+    /**
+     * Resets this memoizing supplier. On next call to the
+     * {@link #get()} method, the {@code delegate} supplier will
+     * be used to supply memoized value.
+     */
+	public void reset() {
+	    reference.set(null);
 	}
 
 }
