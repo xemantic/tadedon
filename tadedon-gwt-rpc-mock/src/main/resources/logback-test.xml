@@ -29,7 +29,12 @@
     </encoder>
   </appender>
 
-  <logger name="com.google.inject.internal" level="INFO" />
+
+  <!-- set TRACE for debugging guice component instantiation statistics -->
+  <logger name="com.google.inject.internal.util.$Stopwatch" level="INFO" />
+
+  <!-- set TRACE for debugging bytecode generation in guice -->
+  <logger name="com.google.inject.internal.BytecodeGen" level="INFO" />
 
   <root level="ALL">
     <appender-ref ref="CONSOLE" />
