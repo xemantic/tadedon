@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Xemantic
+ * Copyright 2010-2011 Xemantic
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,18 +32,18 @@ import com.google.inject.Singleton;
  * <p>
  * Created on Apr 29, 2010
  *
- * @author hshsce
+ * @author morisil
  */
 @Singleton
 public class DefaultTransactionManager implements TransactionManager {
 
-	private final Provider<EntityManagerFactory> m_entityManagerFactoryProvider;
+	private final Provider<EntityManagerFactory> entityManagerFactoryProvider;
 
-	private final AtomicLong m_transactionIdSequencer = new AtomicLong(1);
+	private final AtomicLong transactionIdSequencer = new AtomicLong(1);
 
-	private final ThreadLocal<DefaultTransaction> m_localTransaction = new ThreadLocal<DefaultTransaction>();
+	private final ThreadLocal<DefaultTransaction> localTransaction = new ThreadLocal<DefaultTransaction>();
 
-	private final Logger m_logger;
+	private final Logger logger;
 
 
 	/**
@@ -53,82 +53,85 @@ public class DefaultTransactionManager implements TransactionManager {
 	 * @param logger the logger.
 	 */
 	@Inject
-	public DefaultTransactionManager(Provider<EntityManagerFactory> entityManagerFactoryProvider, Logger logger) {
-		m_entityManagerFactoryProvider = entityManagerFactoryProvider;
-		m_logger = logger;
+	public DefaultTransactionManager(
+	        Provider<EntityManagerFactory> entityManagerFactoryProvider,
+	        Logger logger) {
+
+		this.entityManagerFactoryProvider = entityManagerFactoryProvider;
+		this.logger = logger;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Transaction getLocalTransaction() {
-		return m_localTransaction.get();
+		return localTransaction.get();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Transaction newLocalTransaciton() {
-		final DefaultTransaction transaction = new DefaultTransaction(m_entityManagerFactoryProvider.get().createEntityManager());
-		m_localTransaction.set(transaction);
-		m_logger.debug("Transaction created, id: {}", transaction.getId());
+		final DefaultTransaction transaction = new DefaultTransaction(entityManagerFactoryProvider.get().createEntityManager());
+		localTransaction.set(transaction);
+		logger.debug("trx: {} created", transaction.getId());
 		return transaction;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void closeLocalTransaction() {
-		DefaultTransaction transaction = m_localTransaction.get();
-		m_localTransaction.set(null);
-		if (transaction.m_entityManager.isOpen()) {
-			transaction.m_entityManager.close();
+		DefaultTransaction transaction = localTransaction.get();
+		localTransaction.set(null);
+		if (transaction.entityManager.isOpen()) {
+			transaction.entityManager.close();
 		}
-		m_logger.debug("Transaction closed, id: {}", transaction.getId());
+		logger.debug("trx: {} closed", transaction.getId());
 	}
 
 	private class DefaultTransaction implements Transaction {
 
-		private final String m_id = String.valueOf(m_transactionIdSequencer.getAndIncrement());
+		private final String id = String.valueOf(transactionIdSequencer.getAndIncrement());
 
-		private final EntityManager m_entityManager;
+		private final EntityManager entityManager;
 
-		private Connection m_connection;
+		private Connection connection;
 
-		private boolean m_shouldRollback;
+		private boolean shouldRollback;
 
 		private DefaultTransaction(final EntityManager entityManager) {
-			m_entityManager = entityManager;
+			this.entityManager = entityManager;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public String getId() {
-			return m_id;
+			return id;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public EntityManager getEntityManager() {
-			return m_entityManager;
+			return entityManager;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public Connection getConnection() {
-			if (m_connection == null) {
-				m_connection = m_entityManager.unwrap(Connection.class);
+			if (connection == null) {
+				connection = entityManager.unwrap(Connection.class);
 			}
-			return m_connection;
+			return connection;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public void requestRollback() {
-			m_shouldRollback = true;
+			shouldRollback = true;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		public boolean isRollbackRequested() {
-			return m_shouldRollback;
+			return shouldRollback;
 		}
 
 	}
