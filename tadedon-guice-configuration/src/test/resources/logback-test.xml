@@ -29,7 +29,7 @@
     </encoder>
   </appender>
 
-  <logger name="com.google.inject.internal" level="INFO" />
+  <logger name="com.google.inject.internal.util.$Stopwatch" level="INFO" />
 
   <root level="ALL">
     <appender-ref ref="CONSOLE" />
