@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Xemantic
+ * Copyright 2010-2011 Xemantic
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,21 @@
  */
 package com.xemantic.tadedon.guice.persistence;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.xml.ws.Holder;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
@@ -31,42 +37,43 @@ import com.google.inject.Inject;
  * <p>
  * Created on Mar 25, 2010
  *
- * @author hshsce
+ * @author morisil
  * @see PersistenceModule
  */
 public class TransactionalMethodInterceptor implements MethodInterceptor {
 
 	@Inject
-	private TransactionManager m_transactionManager;
+	private TransactionManager transactionManager;
 
 	@Inject
-	private TransactionSupport m_transactionSupport;
-
-	@Inject
-	private Logger m_logger;
+	private TransactionSupport transactionSupport;
 
 
 	/** {@inheritDoc} */
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
+	    Method method = invocation.getMethod();
+	    Class<?> klass = method.getDeclaringClass();
+	    Logger logger = LoggerFactory.getLogger(klass);
 		final Object result;
-		Transaction transaction = m_transactionManager.getLocalTransaction();
+		Transaction transaction = transactionManager.getLocalTransaction();
 		if (transaction == null) {
-			transaction = m_transactionManager.newLocalTransaciton();
+			transaction = transactionManager.newLocalTransaciton();
 			try {
-				logMethodInvocation("new", transaction, invocation);
-				result = invokeInNewTransaction(new DefaultTransactionContext(invocation, transaction));
+				logMethod("created ", transaction, invocation, logger);
+				result = invokeInNewTransaction(new DefaultTransactionContext(invocation, transaction), logger);
 			} finally {
-				m_transactionManager.closeLocalTransaction();
+				transactionManager.closeLocalTransaction();
 			}
 		} else {
-			logMethodInvocation("existing", transaction, invocation);
+			logMethod("joined  ", transaction, invocation, logger);
 			result = invocation.proceed();
+            logMethod("exit    ", transaction, invocation, logger);
 		}
 		return result;
 	}
 
-	private Object invokeInNewTransaction(DefaultTransactionContext context) throws Throwable {
+	private Object invokeInNewTransaction(DefaultTransactionContext context, Logger logger) throws Throwable {
 		final EntityManager em = context.getTransaction().getEntityManager();
 		try {
 			em.getTransaction().begin();
@@ -78,40 +85,88 @@ public class TransactionalMethodInterceptor implements MethodInterceptor {
 			try {
 				EntityTransaction emTrx = em.getTransaction();
 				if ((!context.getTransaction().isRollbackRequested()) &&
-						m_transactionSupport.shouldCommit(context)) {
+						transactionSupport.shouldCommit(context)) {
 					if (emTrx.isActive()) {
+					    if (logger.isDebugEnabled()) {
+					        logger.debug("trx: {} commit   #{}()",
+					                context.getTransaction().getId(),
+					                context.getMethodInvocation().getMethod().getName());
+					    }
 						emTrx.commit();
 					} else {
-						m_logger.error("EntityManager transaction is already inactive, cannot commit");
+						logger.error("EntityManager transaction is already inactive, cannot commit");
 					}
 				} else {
 					if (emTrx.isActive()) {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("trx: {} rollback #{}()",
+                                    context.getTransaction().getId(),
+                                    context.getMethodInvocation().getMethod().getName());
+                        }
 						emTrx.rollback();
 					} else {
-						m_logger.error("EntityManager transaction is already inactive, cannot rollback");
+						logger.error("EntityManager transaction is already inactive, cannot rollback");
 					}
 				}
 			} catch (Throwable t) {
 				if (context.m_throwable == null) { // we are already throwing
 					throw t;
 				} else {
-					m_logger.error("Exception occured while finishing transaction", t);
+					logger.error("Exception occured while finishing transaction", t);
 				}
 			}
 		}
 	}
 
 
-	private void logMethodInvocation(String transactionKind, Transaction transaction, MethodInvocation invocation) {
-		if (m_logger.isDebugEnabled()) {
-			m_logger.debug(
-					"Invoking method in {} transaction: {}, method: {}, args: {}",
-					new Object[] {
-							transactionKind,
-							transaction.getId(),
-							invocation.getMethod().toGenericString(),
-							Arrays.asList(invocation.getArguments()) });
+	private void logMethod(
+	        String logKind,
+	        Transaction transaction,
+	        MethodInvocation invocation,
+	        Logger logger) {
+		if (logger.isDebugEnabled()) {
+		    logger.debug(
+					  "trx: {} {} #{}()",
+    					new Object[] {
+					          transaction.getId(),
+					          logKind,
+					          invocation.getMethod().getName()});
 		}
+		if (logger.isTraceEnabled()) {
+	          logger.trace(
+	                  "trx: {} {} #{}() args: {}",
+	                    new Object[] {
+                              transaction.getId(),
+	                          logKind,
+	                          invocation.getMethod().getName(),
+	                          argsToString(invocation.getArguments()) });
+		}
+	}
+
+	private String argsToString(Object[] args) {
+	    StringBuilder b = new StringBuilder();
+	    b.append('[');
+	    if (args != null) {
+	        appendArgs(b, args);
+	    }
+	    b.append(']');
+	    return b.toString();
+	}
+
+	private void appendArgs(StringBuilder b, Object[] args) {
+        Joiner joiner = Joiner.on(", ").useForNull("null");
+        Iterable<Object> transformed = Iterables.transform(
+                Arrays.asList(args), new Function<Object, Object>() {
+
+            @Override
+            public Object apply(Object arg) {
+                if (arg instanceof Holder) {
+                    return ((Holder<?>) arg).value;
+                }
+                return arg;
+            }
+        });
+        joiner.appendTo(b, transformed);	    
 	}
 
 	private static class DefaultTransactionContext implements TransactionContext {
