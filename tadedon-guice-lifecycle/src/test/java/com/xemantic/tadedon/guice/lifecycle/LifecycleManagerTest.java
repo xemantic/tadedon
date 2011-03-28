@@ -18,9 +18,11 @@ package com.xemantic.tadedon.guice.lifecycle;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.inject.Injector;
+import com.xemantic.tadedon.logging.Loggers;
 
 /**
  * Unit test for {@link LifecycleManager}.
@@ -30,6 +32,11 @@ import com.google.inject.Injector;
  * @author hshsce
  */
 public abstract class LifecycleManagerTest {
+
+    @BeforeClass
+    public static void redirectJulToSlf4J() {
+        Loggers.redirectJulToSLF4J();
+    }
 
 	@Test
 	public void shouldNotInitializeComponentBeforeManagerInitialization() {

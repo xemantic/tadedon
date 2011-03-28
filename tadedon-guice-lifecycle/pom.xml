@@ -43,10 +43,16 @@
       <artifactId>jsr305</artifactId>
     </dependency>
     
-    <!-- test dependencies -->
+    <!-- test dependences -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.xemantic.tadedon</groupId>
+      <artifactId>tadedon-logging</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
