@@ -29,6 +29,7 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.ServletModule;
 import com.xemantic.tadedon.guice.servlet.mock.FakeServletContainer;
 import com.xemantic.tadedon.guice.servlet.mock.FakeServletContainerModule;
+import com.xemantic.tadedon.logging.Loggers;
 
 /**
  * Unit test for {@link UriReturningRemoteService}.
@@ -50,6 +51,7 @@ public class UriReturningRemoteServiceTest {
      */
     @BeforeClass
     public static void startServletContainer() throws ServletException {
+        Loggers.redirectJulToSLF4J();
         injector = Guice.createInjector(
                 new ServletModule(),
                 new FakeServletContainerModule(),
