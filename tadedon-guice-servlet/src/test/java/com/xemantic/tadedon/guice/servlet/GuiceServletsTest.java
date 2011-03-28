@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Xemantic
+ * Copyright 2010-2011 Xemantic
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@ package com.xemantic.tadedon.guice.servlet;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
 
 import com.google.inject.Stage;
+import com.xemantic.tadedon.logging.Loggers;
 
 /**
  * Unit test for {@link GuiceServlets}.
@@ -31,6 +33,11 @@ import com.google.inject.Stage;
  * @author hshsce
  */
 public class GuiceServletsTest {
+
+    @BeforeClass
+    public static void redirectJulToSLF4J() {
+        Loggers.redirectJulToSLF4J();
+    }
 
     @Test
     public void shouldGetProductionStageWhenNoStageSpecified() throws Exception {
