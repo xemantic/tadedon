@@ -47,7 +47,12 @@
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+    </dependency>
 
+    <!-- test dependencies -->
     <dependency>
       <groupId>com.xemantic.tadedon</groupId>
       <artifactId>tadedon-servlet</artifactId>
@@ -56,6 +61,12 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.xemantic.tadedon</groupId>
+      <artifactId>tadedon-logging</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
