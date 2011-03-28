@@ -44,12 +44,18 @@
     <developer>
       <id>hshsce</id><name>Kazimierz Pogoda</name>
     </developer>
+    <developer>
+      <id>morisil</id><name>Kazimierz Pogoda</name>
+    </developer>
+    <developer>
+      <id>kardigen</id><name>Marcin Kawelski</name>
+    </developer>
   </developers>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gwt.version>2.1.1</gwt.version>
-    <guice.version>2.0</guice.version>
-    <logback.version>0.9.27</logback.version>
+    <gwt.version>2.2.0</gwt.version>
+    <guice.version>3.0</guice.version>
+    <logback.version>0.9.28</logback.version>
     <slf4j.version>1.6.1</slf4j.version>
     <spring.version>3.0.5.RELEASE</spring.version>
   </properties>
@@ -75,6 +81,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <encoding>UTF-8</encoding>
           <source>1.6</source>
@@ -84,6 +91,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.8</version>
         <configuration>
           <excludes>
             <exclude>**/itest/**</exclude>
@@ -176,6 +184,11 @@
       </dependency>
       <dependency>
         <groupId>com.xemantic.tadedon</groupId>
+        <artifactId>tadedon-configuration</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.xemantic.tadedon</groupId>
         <artifactId>tadedon-guice-utils</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -212,7 +225,13 @@
       <dependency>
         <groupId>com.google.gwt.inject</groupId>
         <artifactId>gin</artifactId>
-        <version>1.0</version>
+        <version>1.5.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.google.inject</groupId>
@@ -228,13 +247,11 @@
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
         <version>${gwt.version}</version>
-        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-dev</artifactId>
         <version>${gwt.version}</version>
-        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.eclipse.persistence</groupId>
@@ -246,6 +263,10 @@
         <artifactId>spring-core</artifactId>
         <version>${spring.version}</version>
         <exclusions>
+          <exclusion>
+            <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
+          </exclusion>
           <exclusion>
             <artifactId>spring-asm</artifactId>
             <groupId>org.springframework</groupId>
@@ -268,6 +289,11 @@
         <version>${slf4j.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
         <version>${logback.version}</version>
@@ -285,7 +311,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>r07</version>
+        <version>r08</version>
       </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
@@ -296,26 +322,27 @@
         <groupId>commons-configuration</groupId>
         <artifactId>commons-configuration</artifactId>
         <version>1.6</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.antlr</groupId>
         <artifactId>stringtemplate</artifactId>
         <version>3.2.1</version>
       </dependency>
-
-      <!-- dependencies with scope test -->
-
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.8.1</version>
-        <scope>test</scope>
+        <version>4.8.2</version>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>1.8.5</version>
-        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
