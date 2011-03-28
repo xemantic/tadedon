@@ -19,7 +19,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.xemantic.tadedon</groupId>
   <artifactId>tadedon</artifactId>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>tadedon</name>
   <description>A bunch of GWT, GIN, Guice and Google App Engine utilities</description>
