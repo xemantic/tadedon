@@ -20,11 +20,13 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.xemantic.tadedon.logging.Loggers;
 
 /**
  * Unit test for {@link GuiceConfigurations}.
@@ -34,7 +36,12 @@ import com.google.inject.Injector;
  * @author hshsce
  */
 public class GuiceConfigurationsTest {
- 
+
+    @BeforeClass
+    public static void redirectJulToSlf4J() {
+        Loggers.redirectJulToSLF4J();
+    }
+
     @Test
     public void shouldBindProperties() throws Exception {
         // given 
