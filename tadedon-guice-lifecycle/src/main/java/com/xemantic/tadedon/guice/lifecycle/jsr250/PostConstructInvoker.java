@@ -33,7 +33,6 @@ import com.google.inject.Singleton;
  * Created on Aug 9, 2010
  *
  * @author hshsce
- *
  */
 @ThreadSafe
 @Singleton
