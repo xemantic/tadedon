@@ -39,18 +39,18 @@ import com.xemantic.tadedon.guice.servlet.mock.MethodInvokingFilterChain;
 public class RemoteServiceMethodInterceptor implements MethodInterceptor {
 
 	@Inject
-	private GuiceFilter m_guiceFilter;
+	private GuiceFilter guiceFilter;
 
     @Inject
-    private FakeServletContainer m_servletContainer;
+    private FakeServletContainer servletContainer;
 
 
 	/** {@inheritDoc} */
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		MethodInvokingFilterChain chain = new MethodInvokingFilterChain(invocation);
-		MockHttpServletRequest request = m_servletContainer.newRequest("POST", "/gwt.rpc");
-		m_guiceFilter.doFilter(request, new MockHttpServletResponse(), chain);
+		MockHttpServletRequest request = servletContainer.newRequest("POST", "/gwt.rpc");
+		guiceFilter.doFilter(request, new MockHttpServletResponse(), chain);
 		Throwable throwable = chain.getThrowable();
 		if (throwable != null) {
 			throw throwable;
