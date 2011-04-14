@@ -15,10 +15,10 @@
  */
 package com.xemantic.tadedon.logging;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -48,13 +48,23 @@ public final class Loggers {
 	 * @see SLF4JBridgeHandler#install()
 	 */
 	public static void redirectJulToSLF4J() {
-		try {
-			LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(".level=ALL".getBytes()));
-		} catch (IOException e) {
-			throw new RuntimeException("Should hever happen - memory based streams", e);
-		}
+	    
+	    Logger logger = getRootLogger();
+	    // root logger should propagate log level to all children
+        logger.setLevel(Level.ALL);
+		
 		SLF4JBridgeHandler.install();
 	}
+
+    private static Logger getRootLogger() {
+        Logger logger = Logger.getLogger("");
+        Logger parent = logger.getParent();
+        while( parent != null) {
+            logger = parent;
+            parent = logger.getParent();
+        }
+        return logger;
+    }
 
 	public static void configureLogback(File confFile) {
 	    // assume SLF4J is bound to logback in the current environment
