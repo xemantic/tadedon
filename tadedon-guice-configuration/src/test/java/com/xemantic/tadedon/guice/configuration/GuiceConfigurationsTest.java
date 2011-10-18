@@ -82,9 +82,9 @@ public class GuiceConfigurationsTest {
         ConfigurableComponent component = injector.getInstance(ConfigurableComponent.class);
 
         // then
-        assertThat(component.getConf1Map().size(), is(3));
+        assertThat(component.getConf1Map().size(), is(2));
         assertThat(component.getConf1Map().get("foo"), is("foo"));
-        assertThat(component.getConf1Properties().size(), is(3));
+        assertThat(component.getConf1Properties().size(), is(2));
         assertThat(component.getConf1Properties().getProperty("foo"), is("foo"));
         assertThat(component.getConf1Configuration().getString("foo"), is("foo"));
         assertThat(component.getConf2Configuration().getString("bar"), is("bar"));
