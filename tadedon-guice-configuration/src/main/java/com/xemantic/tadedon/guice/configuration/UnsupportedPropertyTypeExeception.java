@@ -15,35 +15,28 @@
  */
 package com.xemantic.tadedon.guice.configuration;
 
-import java.util.List;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
 /**
- * Component for test purposes
- * @author hshsce
+ * Unsupported property type exception.
+ * 
+ * @author kardigen
  */
-@Singleton
-public class PropertyInjectedComponent {
+@SuppressWarnings("serial")
+public final class UnsupportedPropertyTypeExeception extends RuntimeException {
 
-    private final String foo;
-    private final List<String> list;
+    private final Class<?> property;
 
-    @Inject
-    public PropertyInjectedComponent(
-            @Named("foo") String foo,
-            @Named("list") List<String> list) {
-        this.foo = foo;
-        this.list = list;
-    }
-
-    public String getFoo() {
-        return foo;
+    public UnsupportedPropertyTypeExeception(Class<?> propertyClass) {
+        this.property = propertyClass;
     }
     
-    public List<String> getList() {
-        return list;
+    public Class<?> getProperty() {
+        return property;
     }
+    
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "Unsupported property type: " + property.getName();
+    }
+
 }
