@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -58,6 +59,12 @@ public class GuiceConfigurationsTest {
 
         // then
         assertThat(component.getFoo(), is("foo"));
+        List<String> list = component.getList();
+        assertThat(list, notNullValue());
+        assertThat(list.size(), is(3));
+        assertThat(list.get(0), is("1"));
+        assertThat(list.get(1), is("2"));
+        assertThat(list.get(2), is("3"));
     }
 
     @Test
@@ -75,9 +82,9 @@ public class GuiceConfigurationsTest {
         ConfigurableComponent component = injector.getInstance(ConfigurableComponent.class);
 
         // then
-        assertThat(component.getConf1Map().size(), is(1));
+        assertThat(component.getConf1Map().size(), is(3));
         assertThat(component.getConf1Map().get("foo"), is("foo"));
-        assertThat(component.getConf1Properties().size(), is(1));
+        assertThat(component.getConf1Properties().size(), is(3));
         assertThat(component.getConf1Properties().getProperty("foo"), is("foo"));
         assertThat(component.getConf1Configuration().getString("foo"), is("foo"));
         assertThat(component.getConf2Configuration().getString("bar"), is("bar"));

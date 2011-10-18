@@ -18,7 +18,10 @@ package com.xemantic.tadedon.guice.configuration;
 import static com.google.common.base.Preconditions.*;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -74,8 +77,16 @@ public final class GuiceConfigurations {
     public static void bindProperties(Binder binder, Configuration configuration) {
         for (@SuppressWarnings("unchecked") Iterator<String> iterator = configuration.getKeys(); iterator.hasNext();) {
             String key = iterator.next();
-            String value = (String) configuration.getProperty(key);
-            binder.bindConstant().annotatedWith(Names.named(key)).to(value);
+            Object property = configuration.getProperty(key);
+            if(property instanceof String) {
+                String value = (String) property;
+                binder.bindConstant().annotatedWith(Names.named(key)).to(value);
+            } else if(property instanceof Collection) {
+                List<String> list = new ArrayList<String>((Collection)property); 
+                binder.bind(new TypeLiteral<List<String>>() {}).annotatedWith(Names.named(key)).toInstance(list);
+            } else {
+                throw new UnsupportedPropertyTypeExeception(property.getClass());
+            }
         }
     }
 
