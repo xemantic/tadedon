@@ -19,7 +19,7 @@
   <parent>
     <groupId>com.xemantic.tadedon</groupId>
     <artifactId>tadedon</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
   </parent>
   <groupId>com.xemantic.tadedon</groupId>
   <artifactId>tadedon-guice-configuration</artifactId>
