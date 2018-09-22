@@ -1,8 +1,0 @@
-
-syntax: regexp
-^tadedon-[a-z-]+/target$
-
-syntax: regexp
-^tadedon-gwt/war$
-syntax: regexp
-^tadedon-gwt/www-test$
